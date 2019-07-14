@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13A89D718B2B29834D631A5B /* Pods_OperationsManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 738D4D13AC0BFCA37E484301 /* Pods_OperationsManager.framework */; };
 		4FA2A1632241DFE800B3E13C /* JKGeoCodeSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FA2A1622241DFE800B3E13C /* JKGeoCodeSearchVC.m */; };
 		4FA2A1662241E03000B3E13C /* JKInstallationAddrModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FA2A1642241E03000B3E13C /* JKInstallationAddrModel.m */; };
 		A81B9A8C21893AEC00DF69CF /* JKAboutUsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A81B9A8B21893AEC00DF69CF /* JKAboutUsVC.m */; };
@@ -156,7 +157,6 @@
 		A8F9236F211005E2003F9D81 /* JKMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A8F9236D211005E2003F9D81 /* JKMessageModel.m */; };
 		A8F9237521102EB5003F9D81 /* JKTaskMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A8F9237321102EB5003F9D81 /* JKTaskMessageModel.m */; };
 		A8FF2F5B20EDBC80000955C5 /* JKRepairDeviceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A8FF2F5A20EDBC80000955C5 /* JKRepairDeviceCell.m */; };
-		BEAFDACFA2ED85BB22BAB9EC /* libPods-OperationsManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DA299AF7604F46D71143702 /* libPods-OperationsManager.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -176,7 +176,7 @@
 		4FA2A1622241DFE800B3E13C /* JKGeoCodeSearchVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKGeoCodeSearchVC.m; sourceTree = "<group>"; };
 		4FA2A1642241E03000B3E13C /* JKInstallationAddrModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKInstallationAddrModel.m; sourceTree = "<group>"; };
 		4FA2A1652241E03000B3E13C /* JKInstallationAddrModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKInstallationAddrModel.h; sourceTree = "<group>"; };
-		9DA299AF7604F46D71143702 /* libPods-OperationsManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OperationsManager.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		738D4D13AC0BFCA37E484301 /* Pods_OperationsManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OperationsManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A81B9A8A21893AEC00DF69CF /* JKAboutUsVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JKAboutUsVC.h; sourceTree = "<group>"; };
 		A81B9A8B21893AEC00DF69CF /* JKAboutUsVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKAboutUsVC.m; sourceTree = "<group>"; };
 		A81B9A8D2189401B00DF69CF /* JKFeedbackVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JKFeedbackVC.h; sourceTree = "<group>"; };
@@ -481,7 +481,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A849131B2126D2F3004C96C6 /* GTSDK.framework in Frameworks */,
-				BEAFDACFA2ED85BB22BAB9EC /* libPods-OperationsManager.a in Frameworks */,
+				13A89D718B2B29834D631A5B /* Pods_OperationsManager.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -503,7 +503,7 @@
 				258F356922BB4D7000A5A3C4 /* BaiduMapAPILocation.framework */,
 				258F356722BB3C4400A5A3C4 /* BaiduMap */,
 				258A1B5E22BB2EC800D28BDA /* Frameworks */,
-				9DA299AF7604F46D71143702 /* libPods-OperationsManager.a */,
+				738D4D13AC0BFCA37E484301 /* Pods_OperationsManager.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1242,7 +1242,8 @@
 				A85197F620D0AA4600BA35FC /* Sources */,
 				A85197F720D0AA4600BA35FC /* Frameworks */,
 				A85197F820D0AA4600BA35FC /* Resources */,
-				796952B6760C7E61FD5B692C /* [CP] Copy Pods Resources */,
+				F580C8EF2D414EE598DD5794 /* [CP] Embed Pods Frameworks */,
+				FD12A6F3543A295C4B8E90E6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1329,7 +1330,47 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		796952B6760C7E61FD5B692C /* [CP] Copy Pods Resources */ = {
+		F580C8EF2D414EE598DD5794 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-OperationsManager/Pods-OperationsManager-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManager/IQKeyboardManager.framework",
+				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/MJExtension/MJExtension.framework",
+				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
+				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
+				"${BUILT_PRODUCTS_DIR}/SDAutoLayout/SDAutoLayout.framework",
+				"${BUILT_PRODUCTS_DIR}/SDCycleScrollView/SDCycleScrollView.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/YYCache/YYCache.framework",
+				"${BUILT_PRODUCTS_DIR}/YYImage/YYImage.framework",
+				"${BUILT_PRODUCTS_DIR}/YYWebImage/YYWebImage.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManager.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJExtension.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDAutoLayout.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDCycleScrollView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYCache.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYWebImage.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OperationsManager/Pods-OperationsManager-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FD12A6F3543A295C4B8E90E6 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1337,14 +1378,10 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-OperationsManager/Pods-OperationsManager-resources.sh",
 				"${PODS_ROOT}/BaiduMapKit/BaiduMapKit/BaiduMapAPI_Map.framework/Resources/mapapi.bundle",
-				"${PODS_ROOT}/IQKeyboardManager/IQKeyboardManager/Resources/IQKeyboardManager.bundle",
-				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/mapapi.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IQKeyboardManager.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

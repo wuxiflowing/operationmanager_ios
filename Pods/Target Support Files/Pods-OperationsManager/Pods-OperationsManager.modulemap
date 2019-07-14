@@ -1,0 +1,6 @@
+framework module Pods_OperationsManager {
+  umbrella header "Pods-OperationsManager-umbrella.h"
+
+  export *
+  module * { export * }
+}
