@@ -15,7 +15,8 @@
 #import "JKDeviceModel.h"
 #import "JKScanVC.h"
 #import "JKGeoCodeSearchVC.h"
-
+#import "ZQAlterField.h"
+#import "JKShowContactView.h"
 @interface JKReplaceEquipmentVC () <UITableViewDelegate, UITableViewDataSource, JKDeviceConfigurationCellDelegate,JKChoosePondViewDelegate, JKScanVCDelegate, JKSensorConfigurationCellDelegate, CLLocationManagerDelegate, JKGeoCodeSearchVCDelegate>
 {
     BOOL _isControllerOne;
@@ -229,6 +230,25 @@
     cpV.farmerName = self.farmerName;
     UIView * keywindow = [[UIApplication sharedApplication] keyWindow];
     [keywindow addSubview: cpV];
+}
+
+#pragma mark -- 点击添加联系人
+- (void)chooseAddContact{
+    ZQAlterField *alertView = [ZQAlterField alertView];
+    [alertView ensureClickBlock:^(NSString *nameString, NSString *phoneString) {
+        NSLog(@"%@-%@",nameString,phoneString);
+    }];
+    [alertView show];
+}
+#pragma mark -- 选择联系人tag:1~4
+- (void)chooseContact:(NSInteger)tag{
+    JKShowContactView *showContactView = [JKShowContactView showContactView];
+    showContactView.list = @[@"dd1",@"dd2",@"dd3",@"dd4"];
+    [showContactView ensureCotactClickBlock:^(NSString * _Nonnull contact) {
+        NSLog(@"%@",contact);
+        [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"reloadContactCell" object:nil userInfo:@{@"tag":@(tag),@"contact":contact}]];
+    }];
+    [showContactView show];
 }
 
 - (void)showPondName:(NSString *)pondName withPondId:(NSString *)pondId {
@@ -597,7 +617,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        return 248;
+        return 248 +240;
     } else if (indexPath.row == 1) {
         return 351;
     } else if (indexPath.row == 4) {

@@ -48,7 +48,7 @@
 #define JKUserDefaults [NSUserDefaults standardUserDefaults]
 // 字符串
 #define JKStringWithFormat(str) [NSString stringWithFormat:@"%@",str]
-
+#define JKSafeNull(obj) [obj isKindOfClass:[NSNull class]]?@"":obj
 // 字体大小
 #define JKFont(size) [UIFont systemFontOfSize:size]
 #define IPHONE_8_INCREMENT 1

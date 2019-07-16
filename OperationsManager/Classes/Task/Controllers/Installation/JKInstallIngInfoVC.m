@@ -13,12 +13,12 @@
 #import "JKInstallationResultCell.h"
 #import "JKInstallInfoModel.h"
 #import "JKReplaceEquipmentVC.h"
-#import "JKAddDeviceCell.h"
+#import "JKReplaceNewEquipmentVC.h"
 #import "JKDeviceModel.h"
 #import "JKEquipmentInfoVC.h"
 #import "JKInstallationVC.h"
-
-@interface JKInstallIngInfoVC () <UITableViewDelegate, UITableViewDataSource,JKReplaceEquipmentVCDelegate,JKAddDeviceCellDelegate, JKTaskTopCellDelegate,JKInstallationOrderCellDelegate>
+#import "JKFarmerEquipmentMainCell.h"
+@interface JKInstallIngInfoVC () <UITableViewDelegate, UITableViewDataSource,JKReplaceEquipmentVCDelegate,JKReplaceNewEquipmentVCDelegate,JKFarmerEquipmentMainCellDelegate, JKTaskTopCellDelegate,JKInstallationOrderCellDelegate>
 {
     BOOL _isServiceOn;
     BOOL _isDepositOn;
@@ -586,7 +586,7 @@
 }
 
 #pragma mark -- 添加设备
-- (void)addBtnClick:(UIButton *)btn {
+- (void)addKDBtnClick:(UIButton *)btn {
     _indexCell = btn.tag;
     NSLog(@"%ld",_indexCell);
     JKInstallInfoModel *model = self.dataSource[0];
@@ -645,24 +645,84 @@
 //    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
 }
 
-- (void)setDeviceInfo:(NSString *)deviceId withPondName:(NSString *)pondName withPondId:(NSString *)pondId withNo:(NSInteger)no withAutomic:(NSString *)automic{
+- (void)addQYBtnClick:(UIButton *)btn {
+    _indexCell = btn.tag;
+    NSLog(@"%ld",_indexCell);
     JKInstallInfoModel *model = self.dataSource[0];
-    JKReplaceEquipmentVC *reVC = [[JKReplaceEquipmentVC alloc] init];
+    JKReplaceNewEquipmentVC *reVC = [[JKReplaceNewEquipmentVC alloc] init];
     reVC.delegate = self;
     reVC.customerId = model.txtFarmerID;
-    reVC.deviceID = deviceId;
-    reVC.pondId =  pondId;
-    reVC.pondName = pondName;
-    reVC.isSet = YES;
-    reVC.no = no;
+    reVC.farmerName = model.txtFarmer;
     [self.navigationController pushViewController:reVC animated:YES];
 }
 
-- (void)checkDeviceInfoWithTskId:(NSString *)tskId {
-    JKEquipmentInfoVC *eiVC = [[JKEquipmentInfoVC alloc] init];
-    eiVC.tskID = tskId;
-    [self.navigationController pushViewController:eiVC animated:YES];
+- (void)newAddDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng{
+    JKDeviceModel *dModel = [[JKDeviceModel alloc] init];
+    dModel.deviceId = model.deviceId;
+    dModel.name = pondName;
+    dModel.pondId = pondId;
+    dModel.type = model.type;
+    dModel.dissolvedOxygen = model.dissolvedOxygen;
+    dModel.temperature = model.temperature;
+    dModel.ph = model.ph;
+    dModel.alarmType = model.alarmType;
+    dModel.aeratorControls = model.aeratorControls;
+    dModel.automatic = model.automatic;
+    dModel.workStatus = model.workStatus;
+    dModel.addr = pondAddr;
+    dModel.lat = lat;
+    dModel.lng = lng;
+    [self.addDeviceArr addObject:dModel];
+    //    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:_indexCell inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+    [self.tableView reloadData];
 }
+- (void)newChangeDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withNo:(NSInteger)no{
+    JKDeviceModel *dModel = self.addDeviceArr[no - 3];
+    dModel.deviceId = model.deviceId;
+    dModel.name = pondName;
+    dModel.pondId = pondId;
+    dModel.type = model.type;
+    dModel.dissolvedOxygen = model.dissolvedOxygen;
+    dModel.temperature = model.temperature;
+    dModel.ph = model.ph;
+    dModel.alarmType = model.alarmType;
+    dModel.aeratorControls = model.aeratorControls;
+    dModel.automatic = model.automatic;
+    dModel.workStatus = model.workStatus;
+    [self.tableView reloadData];
+    
+    for (JKDeviceModel *dModel in self.addDeviceArr) {
+        NSLog(@"%@",dModel.deviceId);
+    }
+}
+
+- (void)setDeviceInfo:(NSString *)deviceId withPondName:(NSString *)pondName withPondId:(NSString *)pondId withNo:(NSInteger)no withType:(JKEquipmentType)equipmentType{
+    JKInstallInfoModel *model = self.dataSource[0];
+    if (equipmentType == JKEquipmentType_Old) {
+        JKReplaceEquipmentVC *reVC = [[JKReplaceEquipmentVC alloc] init];
+        reVC.delegate = self;
+        reVC.customerId = model.txtFarmerID;
+        reVC.deviceID = deviceId;
+        reVC.pondId =  pondId;
+        reVC.pondName = pondName;
+        reVC.isSet = YES;
+        reVC.no = no;
+        [self.navigationController pushViewController:reVC animated:YES];
+    }else{
+        JKReplaceNewEquipmentVC *reVC = [[JKReplaceNewEquipmentVC alloc] init];
+        reVC.delegate = self;
+        reVC.customerId = model.txtFarmerID;
+        reVC.deviceID = deviceId;
+        reVC.pondId =  pondId;
+        reVC.pondName = pondName;
+        reVC.isSet = YES;
+        reVC.no = no;
+        [self.navigationController pushViewController:reVC animated:YES];
+    }
+
+}
+
+
 
 #pragma mark -- UITableViewDelegate && UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -697,7 +757,7 @@
             return 48 + 125 + 10 + self.serviceHeight + self.depositHeight + 5;
         }
     } else if (indexPath.row == (self.addDeviceArr.count + 6 - 3)) {
-        return 60;
+        return 88;
     } else {
         return 306 - 48;
     }
@@ -839,25 +899,48 @@
             make.top.equalTo(cell).offset(15);
         }];
         
-        UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [addBtn setTitle:@"+ 添加设备" forState:UIControlStateNormal];
-        [addBtn setTitleColor:kThemeColor forState:UIControlStateNormal];
-        addBtn.tag = indexPath.row;
-        [addBtn addTarget:self action:@selector(addBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        addBtn.titleLabel.font = JKFont(14);
-        [bgView addSubview:addBtn];
-        [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        UIButton *addKDBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [addKDBtn setTitle:@"+ 添加KD326设备" forState:UIControlStateNormal];
+        [addKDBtn setTitleColor:kWhiteColor forState:UIControlStateNormal];
+        [addKDBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_s"] forState:UIControlStateNormal];
+        [addKDBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateHighlighted];
+        addKDBtn.tag = indexPath.row;
+        addKDBtn.layer.cornerRadius = 4;
+        addKDBtn.layer.masksToBounds = YES;
+        [addKDBtn addTarget:self action:@selector(addKDBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        addKDBtn.titleLabel.font = JKFont(14);
+        [bgView addSubview:addKDBtn];
+        [addKDBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(bgView.mas_centerY);
-            make.left.right.equalTo(bgView);
-            make.height.mas_equalTo(40);
+            make.left.equalTo(bgView.mas_left).offset(SCALE_SIZE(15));
+            make.right.equalTo(bgView.mas_centerX).offset(-SCALE_SIZE(7.5));
+            make.height.mas_equalTo(44);
+        }];
+        
+        UIButton *addQYBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [addQYBtn setTitle:@"+ 添加QYT设备" forState:UIControlStateNormal];
+        [addQYBtn setTitleColor:kWhiteColor forState:UIControlStateNormal];
+        [addQYBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_s"] forState:UIControlStateNormal];
+        [addQYBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateHighlighted];
+        addQYBtn.tag = indexPath.row;
+        addQYBtn.layer.cornerRadius = 4;
+        addQYBtn.layer.masksToBounds = YES;
+        [addQYBtn addTarget:self action:@selector(addQYBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        addQYBtn.titleLabel.font = JKFont(14);
+        [bgView addSubview:addQYBtn];
+        [addQYBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(bgView.mas_centerY);
+            make.left.equalTo(bgView.mas_centerX).offset(SCALE_SIZE(7.5));
+            make.right.equalTo(bgView.mas_right).offset(-SCALE_SIZE(15));
+            make.height.mas_equalTo(44);
         }];
         
         return cell;
     } else {
-        static NSString *ID = @"JKAddDeviceCell";
-        JKAddDeviceCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+        static NSString *ID = @"JKFarmerEquipmentMainCell";
+        JKFarmerEquipmentMainCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
         if(!cell){
-            cell = [[JKAddDeviceCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ID];
+            cell = [[JKFarmerEquipmentMainCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ID];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         cell.tag = indexPath.row;
@@ -872,4 +955,10 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    JKDeviceModel *model = self.addDeviceArr[indexPath.row - 3];
+    JKEquipmentInfoVC *eiVC = [[JKEquipmentInfoVC alloc] init];
+    eiVC.tskID = model.deviceId;
+    [self.navigationController pushViewController:eiVC animated:YES];
+}
 @end

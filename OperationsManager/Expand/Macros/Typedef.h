@@ -50,4 +50,9 @@ typedef NS_ENUM(NSInteger, JKImageType) {
     JKImageTypeAttachFile,
 };
 
+typedef NS_ENUM(NSInteger, JKEquipmentType) {
+    JKEquipmentType_Old,
+    JKEquipmentType_New
+};
+
 #endif /* Typedef_h */

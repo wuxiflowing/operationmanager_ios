@@ -12,12 +12,13 @@
 #import "JKRepairResultCell.h"
 #import "JKRepairDeviceCell.h"
 #import "JKReplaceEquipmentVC.h"
+#import "JKReplaceNewEquipmentVC.h"
 #import "JKRepaireInfoModel.h"
 #import "JKDeviceModel.h"
 #import "JKEquipmentInfoVC.h"
 #import "JKRepairVC.h"
 
-@interface JKRepairingInfoVC () <UITableViewDelegate, UITableViewDataSource, JKRepairDeviceCellDelegate, JKReplaceEquipmentVCDelegate, JKTaskTopCellDelegate, JKRepairOrderCellDelegate>
+@interface JKRepairingInfoVC () <UITableViewDelegate, UITableViewDataSource, JKRepairDeviceCellDelegate, JKReplaceEquipmentVCDelegate,JKReplaceNewEquipmentVCDelegate, JKTaskTopCellDelegate, JKRepairOrderCellDelegate>
 {
     BOOL _isNewDevice;
     NSInteger _forRepaireCount;
@@ -391,17 +392,39 @@
 }
 
 #pragma mark -- 更换设备
-- (void)addNewDevice {
-    JKRepaireInfoModel *model = [self.dataSource lastObject];
-    JKReplaceEquipmentVC *reVC = [[JKReplaceEquipmentVC alloc] init];
-    reVC.type = JKEquipmentInfoTypeRepaire;
-    reVC.pondName = model.txtPondsName;
-    reVC.delegate = self;
-    reVC.isFromRepairVC = YES;
-    [self.navigationController pushViewController:reVC animated:YES];
+- (void)addNewDevice:(NSInteger)tagType {
+    if (tagType == 601) {
+        JKRepaireInfoModel *model = [self.dataSource lastObject];
+        JKReplaceNewEquipmentVC *reVC = [[JKReplaceNewEquipmentVC alloc] init];
+        reVC.type = JKEquipmentInfoTypeRepaire;
+        reVC.pondName = model.txtPondsName;
+        reVC.delegate = self;
+        reVC.isFromRepairVC = YES;
+        [self.navigationController pushViewController:reVC animated:YES];
+    }else{
+        JKRepaireInfoModel *model = [self.dataSource lastObject];
+        JKReplaceEquipmentVC *reVC = [[JKReplaceEquipmentVC alloc] init];
+        reVC.type = JKEquipmentInfoTypeRepaire;
+        reVC.pondName = model.txtPondsName;
+        reVC.delegate = self;
+        reVC.isFromRepairVC = YES;
+        [self.navigationController pushViewController:reVC animated:YES];
+    }
+
 }
 
 - (void)replaceDevice:(JKDeviceModel *)model withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng{
+    _isNewDevice = YES;
+    self.nDeviceID = model.deviceId;
+    self.addrStr = pondAddr;
+    self.lat = lat;
+    self.lng = lng;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:0];
+    NSArray <NSIndexPath *> *indexPathArray = @[indexPath];
+    [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+}
+
+- (void)newReplaceDevice:(JKDeviceModel *)model withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng{
     _isNewDevice = YES;
     self.nDeviceID = model.deviceId;
     self.addrStr = pondAddr;

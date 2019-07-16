@@ -27,8 +27,8 @@
 
 #pragma mark -- 更换设备/删除
 - (void)operationBtnClick:(UIButton *)btn {
-    if ([_delegate respondsToSelector:@selector(addNewDevice)]) {
-        [_delegate addNewDevice];
+    if ([_delegate respondsToSelector:@selector(addNewDevice:)]) {
+        [_delegate addNewDevice:btn.tag];
     }
 }
 
@@ -93,21 +93,40 @@
     }];
     
     if (self.repaireType == JKRepaireIng) {
-        UIButton *operationBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [operationBtn setTitle:@"更换设备" forState:UIControlStateNormal];
-        [operationBtn setTitleColor:kWhiteColor forState:UIControlStateNormal];
-        [operationBtn addTarget:self action:@selector(operationBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        operationBtn.titleLabel.font = JKFont(16);
-        operationBtn.layer.cornerRadius = 4;
-        operationBtn.layer.masksToBounds = YES;
-        [operationBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_s"] forState:UIControlStateNormal];
-        [operationBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateHighlighted];
-        [operationBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateSelected];
-        [bgView addSubview:operationBtn];
-        [operationBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        UIButton *operationQYBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [operationQYBtn setTitle:@"更改为QY601" forState:UIControlStateNormal];
+        [operationQYBtn setTitleColor:kWhiteColor forState:UIControlStateNormal];
+        operationQYBtn.tag = 601;
+        [operationQYBtn addTarget:self action:@selector(operationBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        operationQYBtn.titleLabel.font = JKFont(16);
+        operationQYBtn.layer.cornerRadius = 4;
+        operationQYBtn.layer.masksToBounds = YES;
+        [operationQYBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_s"] forState:UIControlStateNormal];
+        [operationQYBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateHighlighted];
+        [operationQYBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateSelected];
+        [bgView addSubview:operationQYBtn];
+        [operationQYBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(deviceLb.mas_centerY);
             make.right.equalTo(bgView).offset(-15);
-            make.size.mas_equalTo(CGSizeMake(90, 30));
+            make.size.mas_equalTo(CGSizeMake(110, 30));
+        }];
+        
+        UIButton *operationKDBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [operationKDBtn setTitle:@"更改为KD326" forState:UIControlStateNormal];
+        [operationKDBtn setTitleColor:kWhiteColor forState:UIControlStateNormal];
+        operationKDBtn.tag = 326;
+        [operationKDBtn addTarget:self action:@selector(operationBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        operationKDBtn.titleLabel.font = JKFont(16);
+        operationKDBtn.layer.cornerRadius = 4;
+        operationKDBtn.layer.masksToBounds = YES;
+        [operationKDBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_s"] forState:UIControlStateNormal];
+        [operationKDBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateHighlighted];
+        [operationKDBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateSelected];
+        [bgView addSubview:operationKDBtn];
+        [operationKDBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(deviceLb.mas_centerY);
+            make.right.equalTo(operationQYBtn.mas_left).offset(-15);
+            make.size.mas_equalTo(CGSizeMake(110, 30));
         }];
     }
 

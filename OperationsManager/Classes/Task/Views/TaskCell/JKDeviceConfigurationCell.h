@@ -17,6 +17,9 @@
 - (void)scanDeviceId;
 - (void)getPondId:(NSString *)pondId;
 - (void)locationAddr;
+
+- (void)chooseAddContact;
+- (void)chooseContact:(NSInteger)tag;
 @end
 
 @interface JKDeviceConfigurationCell : UITableViewCell
@@ -27,6 +30,12 @@
 @property (nonatomic, strong) NSString *deviceId;
 @property (nonatomic, strong) NSString *addrStr;
 @property (nonatomic, assign) BOOL isFromRepairVC;
+@property (nonatomic, strong) NSString *dayContact;
+@property (nonatomic, strong) NSString *nightContact;
+@property (nonatomic, strong) NSString *secondDayContact;
+@property (nonatomic, strong) NSString *secondNightContact;
+
+@property (nonatomic,assign)JKEquipmentType equipmentType;
 - (void)createUI;
 
 @end

@@ -43,6 +43,7 @@
     if (self) {
         self.backgroundColor = kBgColor;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadPondNameCell:)name:@"reloadPondNameCell" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadContactCell:)name:@"reloadContactCell" object:nil];
     }
     return self;
 }
@@ -74,6 +75,31 @@
         [_delegate getPondId:self.pondId];
     }
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:0];
+    NSArray <NSIndexPath *> *indexPathArray = @[indexPath];
+    [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+}
+
+- (void)reloadContactCell:(NSNotification *)noti{
+    NSNumber *tag = noti.userInfo[@"tag"];
+    NSString *contact = noti.userInfo[@"contact"];
+    switch (tag.integerValue) {
+            case 1:
+            self.dayContact = contact;
+            break;
+            case 2:
+            self.nightContact = contact;
+            break;
+            case 3:
+            self.secondDayContact = contact;
+            break;
+            case 4:
+            self.secondNightContact = contact;
+            break;
+            
+        default:
+            break;
+    }
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:tag.integerValue+3 inSection:0];
     NSArray <NSIndexPath *> *indexPathArray = @[indexPath];
     [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
 }
@@ -120,6 +146,12 @@
     }
 }
 
+- (void)addContactClick:(UIButton *)btn{
+    if ([_delegate respondsToSelector:@selector(chooseAddContact)]) {
+        [_delegate chooseAddContact];
+    }
+}
+
 #pragma mark -- 扫描
 - (void)scanBtnClick:(UIButton *)btn {
     if ([_delegate respondsToSelector:@selector(scanDeviceId)]) {
@@ -146,11 +178,11 @@
 
 #pragma mark -- UITableViewDelegate && UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 5;
+    return 5+5;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 4) {
+    if (indexPath.row == 4+5) {
         return 60;
     } else {
         return 48;
@@ -245,43 +277,139 @@
             cell.detailTextLabel.textColor = RGBHex(0x333333);
         }
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    } else {
-        for (NSInteger i = 0; i < 4; i++) {
-            UIView *bgView = [[UIView alloc] init];
-            bgView.backgroundColor = kWhiteColor;
-            [cell.contentView addSubview:bgView];
-            [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(cell.contentView);
-                make.left.equalTo(cell.contentView).offset(SCREEN_WIDTH / 4 * i);
-                make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH / 4, 60));
-            }];
-            
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            if (i == 0) {
-                [btn setTitle:@"测试连接" forState:UIControlStateNormal];
-            } else if (i == 1) {
-                [btn setTitle:@"开" forState:UIControlStateNormal];
-            } else if (i == 2) {
-                [btn setTitle:@"关" forState:UIControlStateNormal];
-            } else if (i == 3) {
-                [btn setTitle:@"校准" forState:UIControlStateNormal];
-            }
-            [btn setTitleColor:kWhiteColor forState:UIControlStateNormal];
-            btn.titleLabel.font = JKFont(14);
-            btn.layer.cornerRadius = 4;
-            btn.layer.masksToBounds = YES;
-            [btn setBackgroundImage:[UIImage imageNamed:@"bg_login_s"] forState:UIControlStateNormal];
-            [btn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateHighlighted];
-            [btn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateSelected];
-            btn.tag = i;
-            [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-            [bgView addSubview:btn];
-            [btn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.centerY.equalTo(bgView.mas_centerY);
-                make.centerX.equalTo(bgView.mas_centerX);
-                make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH / 4 * 0.8, 30));
-            }];
+    } else if (indexPath.row == 4) {
+        cell.textLabel.text = @"白班鱼塘联系人/电话";
+        if (self.dayContact == nil) {
+            cell.detailTextLabel.text = @"请选择";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        } else {
+            cell.detailTextLabel.text = self.dayContact;
+            cell.detailTextLabel.textColor = RGBHex(0x333333);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
+        
+    } else if (indexPath.row == 5) {
+        cell.textLabel.text = @"晚班鱼塘联系人/电话";
+        if (self.nightContact == nil) {
+            cell.detailTextLabel.text = @"请选择";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        } else {
+            cell.detailTextLabel.text = self.nightContact;
+            cell.detailTextLabel.textColor = RGBHex(0x333333);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        
+    } else if (indexPath.row == 6) {
+        cell.textLabel.text = @"白班鱼塘备用联系人/电话";
+        if (self.secondDayContact == nil) {
+            cell.detailTextLabel.text = @"请选择";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        } else {
+            cell.detailTextLabel.text = self.secondDayContact;
+            cell.detailTextLabel.textColor = RGBHex(0x333333);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        
+    } else if (indexPath.row == 7) {
+        cell.textLabel.text = @"晚班鱼塘备用联系人/电话";
+        if (self.secondNightContact == nil) {
+            cell.detailTextLabel.text = @"请选择";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        } else {
+            cell.detailTextLabel.text = self.secondNightContact;
+            cell.detailTextLabel.textColor = RGBHex(0x333333);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        
+    } else if (indexPath.row == 8) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btn setTitle:@"+ 添加联系人" forState:UIControlStateNormal];
+        btn.titleLabel.font = JKFont(15);
+        btn.tag = 1000+8;
+        [btn setTitleColor:kThemeColor forState:UIControlStateNormal];
+        [btn addTarget:self action:@selector(addContactClick:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.contentView addSubview:btn];
+        [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(cell.contentView.mas_centerY);
+            make.centerX.equalTo(cell.contentView.mas_centerX);
+        }];
+    }else {
+        if (self.equipmentType == JKEquipmentType_New) {
+            for (NSInteger i = 0; i < 2; i++) {
+                UIView *bgView = [[UIView alloc] init];
+                bgView.backgroundColor = kWhiteColor;
+                [cell.contentView addSubview:bgView];
+                [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.top.equalTo(cell.contentView);
+                    make.left.equalTo(cell.contentView).offset(SCREEN_WIDTH / 4 * i);
+                    make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH / 4, 60));
+                }];
+                
+                UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+                if (i == 0) {
+                    [btn setTitle:@"测试连接" forState:UIControlStateNormal];
+                } else if (i == 1) {
+                    [btn setTitle:@"校准" forState:UIControlStateNormal];
+                }
+                [btn setTitleColor:kWhiteColor forState:UIControlStateNormal];
+                btn.titleLabel.font = JKFont(14);
+                btn.layer.cornerRadius = 4;
+                btn.layer.masksToBounds = YES;
+                [btn setBackgroundImage:[UIImage imageNamed:@"bg_login_s"] forState:UIControlStateNormal];
+                [btn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateHighlighted];
+                [btn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateSelected];
+                if (i == 0) {
+                    btn.tag = i;
+                } else if (i == 1) {
+                    btn.tag =3;
+                }
+                [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+                [bgView addSubview:btn];
+                [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.centerY.equalTo(bgView.mas_centerY);
+                    make.centerX.equalTo(bgView.mas_centerX);
+                    make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH / 4 * 0.8, 30));
+                }];
+            }
+        }else{
+            for (NSInteger i = 0; i < 4; i++) {
+                UIView *bgView = [[UIView alloc] init];
+                bgView.backgroundColor = kWhiteColor;
+                [cell.contentView addSubview:bgView];
+                [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.top.equalTo(cell.contentView);
+                    make.left.equalTo(cell.contentView).offset(SCREEN_WIDTH / 4 * i);
+                    make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH / 4, 60));
+                }];
+                
+                UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+                if (i == 0) {
+                    [btn setTitle:@"测试连接" forState:UIControlStateNormal];
+                } else if (i == 1) {
+                    [btn setTitle:@"开" forState:UIControlStateNormal];
+                } else if (i == 2) {
+                    [btn setTitle:@"关" forState:UIControlStateNormal];
+                } else if (i == 3) {
+                    [btn setTitle:@"校准" forState:UIControlStateNormal];
+                }
+                [btn setTitleColor:kWhiteColor forState:UIControlStateNormal];
+                btn.titleLabel.font = JKFont(14);
+                btn.layer.cornerRadius = 4;
+                btn.layer.masksToBounds = YES;
+                [btn setBackgroundImage:[UIImage imageNamed:@"bg_login_s"] forState:UIControlStateNormal];
+                [btn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateHighlighted];
+                [btn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateSelected];
+                btn.tag = i;
+                [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+                [bgView addSubview:btn];
+                [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.centerY.equalTo(bgView.mas_centerY);
+                    make.centerX.equalTo(bgView.mas_centerX);
+                    make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH / 4 * 0.8, 30));
+                }];
+            }
+        }
+
     }
     
     return cell;
@@ -306,6 +434,12 @@
     if (indexPath.row == 3) {
         if ([_delegate respondsToSelector:@selector(locationAddr)]) {
             [_delegate locationAddr];
+        }
+    }
+    
+    if (indexPath.row == 4||indexPath.row == 5||indexPath.row == 6||indexPath.row == 7) {
+        if ([_delegate respondsToSelector:@selector(chooseContact:)]) {
+            [_delegate chooseContact:indexPath.row - 3];
         }
     }
 }

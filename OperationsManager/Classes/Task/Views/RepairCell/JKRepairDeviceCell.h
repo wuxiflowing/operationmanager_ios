@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @protocol JKRepairDeviceCellDelegate <NSObject>
-- (void)addNewDevice;
+- (void)addNewDevice:(NSInteger)tagType;
 - (void)deleteNewDevice;
 - (void)showDeviceInfo:(NSString *)tskId;
 - (void)configurationDeviceInfo:(NSString *)tskId;
