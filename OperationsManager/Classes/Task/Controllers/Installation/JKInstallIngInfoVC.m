@@ -1019,6 +1019,9 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.addDeviceArr.count==0) {
+        return;
+    }
     JKDeviceModel *model = self.addDeviceArr[indexPath.row - 3];
     if ([model.type isEqualToString:@"QY601"]) {
         JKNewEquipmentInfoVC *eiVC = [[JKNewEquipmentInfoVC alloc] init];

@@ -10,9 +10,6 @@
 #import "JKDeviceModel.h"
 
 @interface JKNewSensorConfigurationCell () <UITableViewDelegate, UITableViewDataSource>
-{
-    BOOL _chooseSingle;
-}
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *titleArr;
 @property (nonatomic, strong) NSArray *placeholderArr;
@@ -105,20 +102,29 @@
 
 #pragma mark -- 控制类型
 - (void)singleSelected:(UIButton *)btn {
-    if (!btn.selected) {
-        btn.selected = !btn.selected;
-        if (btn.tag == 0) {
-            self.noLineBtn.selected = NO;
-        } else {
-            self.lineBtn.selected = NO;
-        }
-        _chooseSingle = !_chooseSingle;
+    if (btn.selected) {
+        return;
     }
-    self.connectionType = _chooseSingle?1:0;
+    
+    btn.selected = !btn.selected;
+    if (btn.tag == 0) {
+        self.noLineBtn.selected = NO;
+        self.connectionType = 1;
+    } else {
+        self.lineBtn.selected = NO;
+        self.connectionType = 0;
+    }
+    
     if (_dataSource.count != 0) {
         JKDeviceModel *model = _dataSource[0];
         model.connectionType = self.connectionType;
     }
+    if (self.connectionType) {
+        self.matchBtn.enabled = NO;
+    }else{
+        self.matchBtn.enabled = YES;
+    }
+
 }
 
 - (void)btnMatchingClick:(UIButton *)btn{
@@ -215,6 +221,11 @@
         [matchBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateHighlighted];
         [matchBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateSelected];
         [matchBtn addTarget:self action:@selector(btnMatchingClick:) forControlEvents:UIControlEventTouchUpInside];
+        if (self.connectionType) {
+            matchBtn.enabled = NO;
+        }else{
+            matchBtn.enabled = YES;
+        }
         [cell addSubview:matchBtn];
         [matchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(cell.mas_centerY);

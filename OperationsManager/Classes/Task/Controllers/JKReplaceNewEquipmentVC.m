@@ -396,7 +396,7 @@
 #pragma mark -- 设备信息
 - (void)getDeviceInfo:(NSString *)tskID {
     self.tskID = tskID;
-    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/device/new/%@",kUrl_Base,@"000005"];
+    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/device/new/%@",kUrl_Base,tskID];
     
     [[JKHttpTool shareInstance] GetReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
         if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
@@ -409,9 +409,9 @@
             model.type = [NSString stringWithFormat:@"%@",dict[@"type"]];
             model.workStatus = [dict[@"workStatus"] integerValue];
             model.deviceControlInfoBeanList = dict[@"deviceControlInfoBeanList"];
-            model.oxy = [dict[@"oxy"] floatValue];
-            model.temp = [dict[@"temp"] floatValue];
-            model.ph = [dict[@"ph"] floatValue];
+            model.oxy = [JKSafeNull(dict[@"oxy"]) floatValue];
+            model.temp = [JKSafeNull(dict[@"temp"]) floatValue];
+            model.ph = [JKSafeNull(dict[@"ph"]) floatValue];
             model.connectionType = [dict[@"connectionType"] integerValue];
             model.alertlineOne = [dict[@"alertline1"] floatValue];
             model.alertlineTwo = [dict[@"alertline2"] floatValue];

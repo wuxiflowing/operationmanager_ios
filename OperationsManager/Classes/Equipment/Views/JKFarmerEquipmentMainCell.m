@@ -79,7 +79,6 @@
 //        self.alarmType = @"数据解析异常";
         self.statusImageView.image = [UIImage imageNamed:@"icon_ponds_warning"];
     }
-    
 
     
     [self setControlStatusWithView:self.control1Lb status:model.aeratorControlOne];
@@ -107,21 +106,20 @@
         self.temLb.text = @"--";
         self.phLb.text = @"--";
     }else{
-        if ([[NSString stringWithFormat:@"%@",JKSafeNull(model.dissolvedOxygen)] isEqualToString:@""]) {
+        if ([model.dissolvedOxygen isEqualToString:@"<null>"]) {
             self.oxyValueLb.text = @"--";
         }else{
-            self.oxyValueLb.text = [NSString stringWithFormat:@"%@",JKSafeNull(model.dissolvedOxygen)];
+            self.oxyValueLb.text = [NSString stringWithFormat:@"%@",model.dissolvedOxygen];
         }
-        
-        if ([[NSString stringWithFormat:@"%@",JKSafeNull(model.temperature)] isEqualToString:@""]) {
+        if ([model.temperature isEqualToString:@"<null>"]) {
             self.temLb.text = @"--";
         }else{
-            self.temLb.text = [NSString stringWithFormat:@"%zd℃",[NSString stringWithFormat:@"%@",JKSafeNull(model.temperature)].integerValue];
+            self.temLb.text = [NSString stringWithFormat:@"%@℃",model.temperature];
         }
-        if ([[NSString stringWithFormat:@"%@",model.ph] isEqualToString:@"-1"]) {
+        if ([[NSString stringWithFormat:@"%@",model.ph] isEqualToString:@"-1"]||[model.temperature isEqualToString:@"<null>"]) {
             self.phLb.text = @"--";
         }else{
-            self.phLb.text = JKSafeNull(model.ph);
+            self.phLb.text = model.ph;
         }
     }
     

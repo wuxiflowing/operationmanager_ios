@@ -35,7 +35,7 @@
 @property (nonatomic, strong) NSString *alarmType;
 @property (nonatomic, strong) NSString *alertlineTwo;
 @property (nonatomic, strong) NSString *automatic;
-@property (nonatomic, strong) NSArray *dissolvedOxygen;
+@property (nonatomic, strong) NSString *dissolvedOxygen;
 @property (nonatomic, strong) NSString *enabled;
 @property (nonatomic, strong) NSString *deviceId;
 @property (nonatomic, strong) NSString *deviceIdentifier;
@@ -44,7 +44,7 @@
 @property (nonatomic, strong) NSString *oxyLimitUp;
 @property (nonatomic, strong) NSString *ph;
 @property (nonatomic, strong) NSString *scheduled;
-@property (nonatomic, strong) NSArray *temperature;
+@property (nonatomic, strong) NSString *temperature;
 @property (nonatomic, strong) NSString *type;
 @property (nonatomic, strong) NSString *workStatus;
 @property (nonatomic, strong) NSString *aeratorControlTwo;
