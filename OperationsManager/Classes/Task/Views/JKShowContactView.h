@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "JKContactModel.h"
 NS_ASSUME_NONNULL_BEGIN
 //输入内容回调
-typedef void(^ensureContactCallback)(NSString *contact);
+typedef void(^ensureContactCallback)(JKContactModel *contact);
 
 @interface JKShowContactView : UIView
 @property (weak, nonatomic) IBOutlet UITableView *tableview;

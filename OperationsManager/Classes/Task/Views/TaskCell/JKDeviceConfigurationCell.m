@@ -54,6 +54,7 @@
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
 }
 
+
 - (void)createUI {
     [self addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -279,46 +280,69 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else if (indexPath.row == 4) {
         cell.textLabel.text = @"白班鱼塘联系人/电话";
-        if (self.dayContact == nil) {
-            cell.detailTextLabel.text = @"请选择";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        } else {
+        if (self.dayContact) {
             cell.detailTextLabel.text = self.dayContact;
             cell.detailTextLabel.textColor = RGBHex(0x333333);
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }else{
+            if (self.contactsModel.contacters) {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@-%@",self.contactsModel.contacters,self.contactsModel.contactPhone];
+                cell.detailTextLabel.textColor = RGBHex(0x333333);
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }else{
+                cell.detailTextLabel.text = @"请选择";
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }
         }
-        
     } else if (indexPath.row == 5) {
         cell.textLabel.text = @"晚班鱼塘联系人/电话";
-        if (self.nightContact == nil) {
-            cell.detailTextLabel.text = @"请选择";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        } else {
+        if (self.nightContact) {
             cell.detailTextLabel.text = self.nightContact;
             cell.detailTextLabel.textColor = RGBHex(0x333333);
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }else{
+            if (self.contactsModel.nightContacters) {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@-%@",self.contactsModel.nightContacters,self.contactsModel.nightContactPhone];
+                cell.detailTextLabel.textColor = RGBHex(0x333333);
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }else{
+                cell.detailTextLabel.text = @"请选择";
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }
         }
         
     } else if (indexPath.row == 6) {
         cell.textLabel.text = @"白班鱼塘备用联系人/电话";
-        if (self.secondDayContact == nil) {
-            cell.detailTextLabel.text = @"请选择";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        } else {
+        if (self.secondDayContact) {
             cell.detailTextLabel.text = self.secondDayContact;
             cell.detailTextLabel.textColor = RGBHex(0x333333);
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }else{
+            if (self.contactsModel.standbynightContact) {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@-%@",self.contactsModel.standbyContact,self.contactsModel.standbyContactPhone];
+                cell.detailTextLabel.textColor = RGBHex(0x333333);
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }else{
+                cell.detailTextLabel.text = @"请选择";
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }
         }
         
     } else if (indexPath.row == 7) {
         cell.textLabel.text = @"晚班鱼塘备用联系人/电话";
-        if (self.secondNightContact == nil) {
-            cell.detailTextLabel.text = @"请选择";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        } else {
+        if (self.secondNightContact) {
             cell.detailTextLabel.text = self.secondNightContact;
             cell.detailTextLabel.textColor = RGBHex(0x333333);
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }else{
+            if (self.contactsModel.standbynightContact) {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@-%@",self.contactsModel.standbynightContact,self.contactsModel.standbynightContactPhone];
+                cell.detailTextLabel.textColor = RGBHex(0x333333);
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }else{
+                cell.detailTextLabel.text = @"请选择";
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }
         }
         
     } else if (indexPath.row == 8) {

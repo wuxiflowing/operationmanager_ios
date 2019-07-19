@@ -17,7 +17,7 @@
 #import "JKDeviceModel.h"
 #import "JKEquipmentInfoVC.h"
 #import "JKRepairVC.h"
-
+#import "JKContactModel.h"
 @interface JKRepairingInfoVC () <UITableViewDelegate, UITableViewDataSource, JKRepairDeviceCellDelegate, JKReplaceEquipmentVCDelegate,JKReplaceNewEquipmentVCDelegate, JKTaskTopCellDelegate, JKRepairOrderCellDelegate>
 {
     BOOL _isNewDevice;
@@ -34,6 +34,7 @@
 @property (nonatomic, assign) CGFloat lat;
 @property (nonatomic, assign) CGFloat lng;
 @property (nonatomic, strong) NSString *addrStr;
+@property (nonatomic, strong) JKContactsModel *contactsModel;
 @end
 
 @implementation JKRepairingInfoVC
@@ -362,7 +363,31 @@
         }
         [dict setObject:[NSString stringWithFormat:@"%f",self.lat] forKey:@"latitude"];
         [dict setObject:[NSString stringWithFormat:@"%f",self.lng] forKey:@"longitude"];
-
+        if (self.contactsModel.contacters) {
+            [dict setObject:self.contactsModel.contacters forKey:@"contacters"];
+        }
+        if (self.contactsModel.contactPhone) {
+            [dict setObject:self.contactsModel.contactPhone forKey:@"contactPhone"];
+        }
+        if (self.contactsModel.standbyContact) {
+            [dict setObject:self.contactsModel.standbyContact forKey:@"standbyContact"];
+        }
+        if (self.contactsModel.standbyContactPhone) {
+            [dict setObject:self.contactsModel.standbyContactPhone forKey:@"standbyContactPhone"];
+        }
+        if (self.contactsModel.nightContacters) {
+            [dict setObject:self.contactsModel.nightContacters forKey:@"nightContacters"];
+        }
+        if (self.contactsModel.nightContactPhone) {
+            [dict setObject:self.contactsModel.nightContactPhone forKey:@"nightContactPhone"];
+        }
+        if (self.contactsModel.standbynightContact) {
+            [dict setObject:self.contactsModel.standbynightContact forKey:@"standbynightContact"];
+        }
+        if (self.contactsModel.standbynightContactPhone) {
+            [dict setObject:self.contactsModel.standbynightContactPhone forKey:@"standbynightContactPhone"];
+        }
+        
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         [params setObject:dict forKey:@"appData"];
         JKRepaireInfoModel *model = self.dataSource[0];
@@ -400,6 +425,7 @@
         reVC.pondName = model.txtPondsName;
         reVC.delegate = self;
         reVC.isFromRepairVC = YES;
+        reVC.customerId = model.txtFarmerID;
         [self.navigationController pushViewController:reVC animated:YES];
     }else{
         JKRepaireInfoModel *model = [self.dataSource lastObject];
@@ -408,28 +434,31 @@
         reVC.pondName = model.txtPondsName;
         reVC.delegate = self;
         reVC.isFromRepairVC = YES;
+        reVC.customerId = model.txtFarmerID;
         [self.navigationController pushViewController:reVC animated:YES];
     }
 
 }
 
-- (void)replaceDevice:(JKDeviceModel *)model withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng{
+- (void)replaceDevice:(JKDeviceModel *)model withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng contactsModel:(JKContactsModel *)contactsModel{
     _isNewDevice = YES;
     self.nDeviceID = model.deviceId;
     self.addrStr = pondAddr;
     self.lat = lat;
     self.lng = lng;
+    self.contactsModel = contactsModel;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:0];
     NSArray <NSIndexPath *> *indexPathArray = @[indexPath];
     [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
 }
 
-- (void)newReplaceDevice:(JKDeviceModel *)model withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng{
+- (void)newReplaceDevice:(JKDeviceModel *)model withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng contactsModel:(JKContactsModel *)contactsModel{
     _isNewDevice = YES;
     self.nDeviceID = model.deviceId;
     self.addrStr = pondAddr;
     self.lat = lat;
     self.lng = lng;
+    self.contactsModel = contactsModel;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:0];
     NSArray <NSIndexPath *> *indexPathArray = @[indexPath];
     [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];

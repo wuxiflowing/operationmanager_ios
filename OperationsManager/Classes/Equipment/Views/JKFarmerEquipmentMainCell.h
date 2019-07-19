@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-@class JKDeviceModel;
+@class JKPondChildDeviceModel;
+@class JKPondModel;
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol JKFarmerEquipmentMainCellDelegate <NSObject>
-- (void)deleteDevice:(NSInteger)no;
-- (void)setDeviceInfo:(NSString *)deviceId withPondName:(NSString *)pondName withPondId:(NSString *)pondId withNo:(NSInteger)no withType:(JKEquipmentType)equipmentType;
+- (void)pushDeviceInfoVC:(JKPondChildDeviceModel *)dModel;
 @end
 NS_ASSUME_NONNULL_END
 
@@ -21,7 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface JKFarmerEquipmentMainCell : UITableViewCell
 
 @property (nonatomic, weak) id<JKFarmerEquipmentMainCellDelegate> delegate;
-- (void)configCellWithModel:(JKDeviceModel *)model;
+- (void)configCellWithModel:(JKPondChildDeviceModel *)model withPondModel:(JKPondModel *)pModel;
+
 @end
 
 NS_ASSUME_NONNULL_END

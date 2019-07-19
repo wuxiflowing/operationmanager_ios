@@ -72,10 +72,10 @@
         return;
     }
     JKDeviceModel *model = dataSource[0];
-    self.oxygenUpA = model.voltageUpA;
-    self.oxygenDownA = model.voltageDownA;
-    self.electricCurrentUpA = model.electricCurrentUpA;
-    self.electricCurrentDownA = model.electricCurrentDownA;
+    self.oxygenUpA = [NSString stringWithFormat:@"%.1f",model.controlInfo1.oxyLimitUp];
+    self.oxygenDownA =[NSString stringWithFormat:@"%.1f",model.controlInfo1.oxyLimitDown];
+    self.electricCurrentUpA = [NSString stringWithFormat:@"%.1f",model.controlInfo1.electricityUp];
+    self.electricCurrentDownA = [NSString stringWithFormat:@"%.1f",model.controlInfo1.electricityDown];
     [self.tableView reloadData];
 }
 
@@ -135,7 +135,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *ID = [NSString stringWithFormat:@"cell%ld",indexPath.row];
+    NSString *ID = [NSString stringWithFormat:@"cell%zd",indexPath.row];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
     if(!cell){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ID];
@@ -184,7 +184,7 @@
         [textField mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(cell);
             make.bottom.equalTo(cell);
-            make.right.equalTo(cell.detailTextLabel.mas_left).offset(-5);
+            make.right.equalTo(cell).offset(-50);
             make.width.mas_offset(100);
         }];
         

@@ -18,8 +18,8 @@
 		34FB7D1B22DDA1DE0055D36C /* JKNewControllerConfigurationTwoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D1A22DDA1DE0055D36C /* JKNewControllerConfigurationTwoCell.m */; };
 		34FB7D1E22DDA4340055D36C /* JKNewControllerConfigurationThreeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D1D22DDA4340055D36C /* JKNewControllerConfigurationThreeCell.m */; };
 		34FB7D2122DDA5BE0055D36C /* JKNewControllerConfigurationFourCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D2022DDA5BE0055D36C /* JKNewControllerConfigurationFourCell.m */; };
-		34FB7D2522DDC4A80055D36C /* JKFarmerEquipmentMainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34FB7D2322DDC4A80055D36C /* JKFarmerEquipmentMainCell.xib */; };
-		34FB7D2622DDC4A80055D36C /* JKFarmerEquipmentMainCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D2422DDC4A80055D36C /* JKFarmerEquipmentMainCell.m */; };
+		34FB7D2522DDC4A80055D36C /* JKFarmerEquipmentTaskCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34FB7D2322DDC4A80055D36C /* JKFarmerEquipmentTaskCell.xib */; };
+		34FB7D2622DDC4A80055D36C /* JKFarmerEquipmentTaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D2422DDC4A80055D36C /* JKFarmerEquipmentTaskCell.m */; };
 		34FB7D2922DE09E50055D36C /* JKNewEquipmentInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D2822DE09E40055D36C /* JKNewEquipmentInfoVC.m */; };
 		34FB7D2C22DE0A440055D36C /* JKNewEquipmentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D2A22DE0A440055D36C /* JKNewEquipmentModel.m */; };
 		34FB7D3C22DE0A9B0055D36C /* JKNewEquipmentControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D2E22DE0A9B0055D36C /* JKNewEquipmentControllerCell.m */; };
@@ -29,6 +29,10 @@
 		34FB7D4022DE0A9B0055D36C /* JKNewEquipmentInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D3422DE0A9B0055D36C /* JKNewEquipmentInfoCell.m */; };
 		34FB7D4122DE0A9B0055D36C /* JKNewEquipmentControllerAInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D3922DE0A9B0055D36C /* JKNewEquipmentControllerAInfoCell.m */; };
 		34FB7D4222DE0A9B0055D36C /* JKNewEquipmentPondCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D3B22DE0A9B0055D36C /* JKNewEquipmentPondCell.m */; };
+		34FB7D4622DE12990055D36C /* JKFarmerEquipmentMainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34FB7D4322DE12980055D36C /* JKFarmerEquipmentMainCell.xib */; };
+		34FB7D4722DE12990055D36C /* JKFarmerEquipmentMainCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D4522DE12990055D36C /* JKFarmerEquipmentMainCell.m */; };
+		34FB7D4A22E017AD0055D36C /* JKDeviceControlInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D4922E017AD0055D36C /* JKDeviceControlInfo.m */; };
+		34FB7D4D22E06A0E0055D36C /* JKContactModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB7D4C22E06A0E0055D36C /* JKContactModel.m */; };
 		4FA2A1632241DFE800B3E13C /* JKGeoCodeSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FA2A1622241DFE800B3E13C /* JKGeoCodeSearchVC.m */; };
 		4FA2A1662241E03000B3E13C /* JKInstallationAddrModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FA2A1642241E03000B3E13C /* JKInstallationAddrModel.m */; };
 		A81B9A8C21893AEC00DF69CF /* JKAboutUsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A81B9A8B21893AEC00DF69CF /* JKAboutUsVC.m */; };
@@ -211,9 +215,9 @@
 		34FB7D1D22DDA4340055D36C /* JKNewControllerConfigurationThreeCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKNewControllerConfigurationThreeCell.m; sourceTree = "<group>"; };
 		34FB7D1F22DDA5BE0055D36C /* JKNewControllerConfigurationFourCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JKNewControllerConfigurationFourCell.h; sourceTree = "<group>"; };
 		34FB7D2022DDA5BE0055D36C /* JKNewControllerConfigurationFourCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKNewControllerConfigurationFourCell.m; sourceTree = "<group>"; };
-		34FB7D2222DDC4A80055D36C /* JKFarmerEquipmentMainCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKFarmerEquipmentMainCell.h; sourceTree = "<group>"; };
-		34FB7D2322DDC4A80055D36C /* JKFarmerEquipmentMainCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JKFarmerEquipmentMainCell.xib; sourceTree = "<group>"; };
-		34FB7D2422DDC4A80055D36C /* JKFarmerEquipmentMainCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKFarmerEquipmentMainCell.m; sourceTree = "<group>"; };
+		34FB7D2222DDC4A80055D36C /* JKFarmerEquipmentTaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKFarmerEquipmentTaskCell.h; sourceTree = "<group>"; };
+		34FB7D2322DDC4A80055D36C /* JKFarmerEquipmentTaskCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JKFarmerEquipmentTaskCell.xib; sourceTree = "<group>"; };
+		34FB7D2422DDC4A80055D36C /* JKFarmerEquipmentTaskCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKFarmerEquipmentTaskCell.m; sourceTree = "<group>"; };
 		34FB7D2722DE09E40055D36C /* JKNewEquipmentInfoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKNewEquipmentInfoVC.h; sourceTree = "<group>"; };
 		34FB7D2822DE09E40055D36C /* JKNewEquipmentInfoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKNewEquipmentInfoVC.m; sourceTree = "<group>"; };
 		34FB7D2A22DE0A440055D36C /* JKNewEquipmentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKNewEquipmentModel.m; sourceTree = "<group>"; };
@@ -232,6 +236,13 @@
 		34FB7D3922DE0A9B0055D36C /* JKNewEquipmentControllerAInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKNewEquipmentControllerAInfoCell.m; sourceTree = "<group>"; };
 		34FB7D3A22DE0A9B0055D36C /* JKNewEquipmentInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKNewEquipmentInfoCell.h; sourceTree = "<group>"; };
 		34FB7D3B22DE0A9B0055D36C /* JKNewEquipmentPondCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKNewEquipmentPondCell.m; sourceTree = "<group>"; };
+		34FB7D4322DE12980055D36C /* JKFarmerEquipmentMainCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JKFarmerEquipmentMainCell.xib; sourceTree = "<group>"; };
+		34FB7D4422DE12990055D36C /* JKFarmerEquipmentMainCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKFarmerEquipmentMainCell.h; sourceTree = "<group>"; };
+		34FB7D4522DE12990055D36C /* JKFarmerEquipmentMainCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKFarmerEquipmentMainCell.m; sourceTree = "<group>"; };
+		34FB7D4822E017AD0055D36C /* JKDeviceControlInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JKDeviceControlInfo.h; sourceTree = "<group>"; };
+		34FB7D4922E017AD0055D36C /* JKDeviceControlInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKDeviceControlInfo.m; sourceTree = "<group>"; };
+		34FB7D4B22E06A0E0055D36C /* JKContactModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JKContactModel.h; sourceTree = "<group>"; };
+		34FB7D4C22E06A0E0055D36C /* JKContactModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKContactModel.m; sourceTree = "<group>"; };
 		4FA2A1612241DFE800B3E13C /* JKGeoCodeSearchVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKGeoCodeSearchVC.h; sourceTree = "<group>"; };
 		4FA2A1622241DFE800B3E13C /* JKGeoCodeSearchVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKGeoCodeSearchVC.m; sourceTree = "<group>"; };
 		4FA2A1642241E03000B3E13C /* JKInstallationAddrModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKInstallationAddrModel.m; sourceTree = "<group>"; };
@@ -787,6 +798,9 @@
 		A851984220D0B78900BA35FC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				34FB7D4422DE12990055D36C /* JKFarmerEquipmentMainCell.h */,
+				34FB7D4522DE12990055D36C /* JKFarmerEquipmentMainCell.m */,
+				34FB7D4322DE12980055D36C /* JKFarmerEquipmentMainCell.xib */,
 				34FB7D2D22DE0A9B0055D36C /* NewEquipmentInfoCellViews */,
 				A846284820F333740035FCDB /* JKEquipmentCell.h */,
 				A846284920F333740035FCDB /* JKEquipmentCell.m */,
@@ -1006,6 +1020,8 @@
 				A8DFD4142121774E004B172C /* JKRepaireInfoModel.m */,
 				A8DFD4682122C488004B172C /* JKDeviceModel.h */,
 				A8DFD4692122C488004B172C /* JKDeviceModel.m */,
+				34FB7D4822E017AD0055D36C /* JKDeviceControlInfo.h */,
+				34FB7D4922E017AD0055D36C /* JKDeviceControlInfo.m */,
 				A8A4C3932178184A0055DDB6 /* JKMaintainInfoModel.h */,
 				A8A4C3942178184A0055DDB6 /* JKMaintainInfoModel.m */,
 				A8351AEC2188276B0038C5AD /* JKRecyceInfoModel.h */,
@@ -1014,6 +1030,8 @@
 				A8D98BDE21A9A0A000DF0C65 /* JKUnitedDeviceModel.m */,
 				4FA2A1652241E03000B3E13C /* JKInstallationAddrModel.h */,
 				4FA2A1642241E03000B3E13C /* JKInstallationAddrModel.m */,
+				34FB7D4B22E06A0E0055D36C /* JKContactModel.h */,
+				34FB7D4C22E06A0E0055D36C /* JKContactModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1212,9 +1230,9 @@
 				A8E1BDA020EC638200A3AB3C /* JKInstallationResultCell.m */,
 				A86B773221339A94003870FC /* JKInstallationedResultCell.h */,
 				A86B773321339A94003870FC /* JKInstallationedResultCell.m */,
-				34FB7D2222DDC4A80055D36C /* JKFarmerEquipmentMainCell.h */,
-				34FB7D2422DDC4A80055D36C /* JKFarmerEquipmentMainCell.m */,
-				34FB7D2322DDC4A80055D36C /* JKFarmerEquipmentMainCell.xib */,
+				34FB7D2222DDC4A80055D36C /* JKFarmerEquipmentTaskCell.h */,
+				34FB7D2422DDC4A80055D36C /* JKFarmerEquipmentTaskCell.m */,
+				34FB7D2322DDC4A80055D36C /* JKFarmerEquipmentTaskCell.xib */,
 				A8522164212557970085D959 /* JKAddDeviceCell.h */,
 				A8522165212557970085D959 /* JKAddDeviceCell.m */,
 			);
@@ -1421,9 +1439,10 @@
 				A8DFD45021227334004B172C /* TZImagePickerController.bundle in Resources */,
 				34FB7D0822DCB7A90055D36C /* JKShowContactView.xib in Resources */,
 				A851985B20D0B78900BA35FC /* LaunchScreen.storyboard in Resources */,
-				34FB7D2522DDC4A80055D36C /* JKFarmerEquipmentMainCell.xib in Resources */,
+				34FB7D2522DDC4A80055D36C /* JKFarmerEquipmentTaskCell.xib in Resources */,
 				34FB7D0022DCAE9A0055D36C /* ZQAlterField.xib in Resources */,
 				A851989F20D0C23B00BA35FC /* images.bundle in Resources */,
+				34FB7D4622DE12990055D36C /* JKFarmerEquipmentMainCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1514,6 +1533,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34FB7D0122DCAE9A0055D36C /* ZQAlterField.m in Sources */,
+				34FB7D4A22E017AD0055D36C /* JKDeviceControlInfo.m in Sources */,
 				A81B9A8F2189401B00DF69CF /* JKFeedbackVC.m in Sources */,
 				34FB7D3F22DE0A9B0055D36C /* JKNewEquipmentControllerCInfoCell.m in Sources */,
 				A8522166212557970085D959 /* JKAddDeviceCell.m in Sources */,
@@ -1554,12 +1574,14 @@
 				A8E1BDC820ECCF0B00A3AB3C /* JKRepairResultCell.m in Sources */,
 				A8DFD44B21227334004B172C /* TZAssetCell.m in Sources */,
 				A8E1BDAD20ECAA8E00A3AB3C /* UITextView+JKTextView.m in Sources */,
+				34FB7D4722DE12990055D36C /* JKFarmerEquipmentMainCell.m in Sources */,
 				A85198AF20D0C53000BA35FC /* JKEquipmentVC.m in Sources */,
 				A8DFD42121219882004B172C /* JKInstallWaitInfoVC.m in Sources */,
 				A88B1D1020EF429800B667A7 /* UIBarButtonItem+Badge.m in Sources */,
 				A8EFE7FB214F80EA0068028A /* JKEquipmentChartCell.m in Sources */,
 				A8768B952152176B00D77501 /* JKFactoryManager.m in Sources */,
 				A87626B720EE1C88007F3E66 /* JKRecyceWaitVC.m in Sources */,
+				34FB7D4D22E06A0E0055D36C /* JKContactModel.m in Sources */,
 				A851985A20D0B78900BA35FC /* AppDelegate.m in Sources */,
 				A861DB1220F484F300EB5187 /* JKReplaceEquipmentVC.m in Sources */,
 				A86B773421339A94003870FC /* JKInstallationedResultCell.m in Sources */,
@@ -1610,7 +1632,7 @@
 				A8E1BDA720EC99E400A3AB3C /* JKMaintainOrderCell.m in Sources */,
 				A8768B932152176B00D77501 /* JKCustomDateView.m in Sources */,
 				A8768B962152176C00D77501 /* UIView+JKDateFilterView.m in Sources */,
-				34FB7D2622DDC4A80055D36C /* JKFarmerEquipmentMainCell.m in Sources */,
+				34FB7D2622DDC4A80055D36C /* JKFarmerEquipmentTaskCell.m in Sources */,
 				34FB7D2C22DE0A440055D36C /* JKNewEquipmentModel.m in Sources */,
 				A855E9C120EB7ED700CEF689 /* JKTaskTopCell.m in Sources */,
 				A85198E820D111D500BA35FC /* JKHttpTool.m in Sources */,

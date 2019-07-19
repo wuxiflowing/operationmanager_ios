@@ -185,21 +185,11 @@
                                     <constraint firstAttribute="height" constant="0.5" id="dTz-sH-Xl1"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lpr-Ey-Lxj">
-                                <rect key="frame" x="265" y="154.5" width="30" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <state key="normal" title="删除">
-                                    <color key="titleColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="onPondDetailAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="WAu-4m-462"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rXD-sx-YAC">
-                                <rect key="frame" x="210" y="154.5" width="30" height="30"/>
+                                <rect key="frame" x="231" y="154.5" width="54" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <state key="normal" title="配置">
-                                    <color key="titleColor" red="0.0078431372550000003" green="0.56470588239999997" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="设备详情">
+                                    <color key="titleColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="onEquimentDetailAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="CEn-YM-xWx"/>
@@ -217,7 +207,6 @@
                             <constraint firstAttribute="bottom" secondItem="wKW-zM-xm1" secondAttribute="bottom" id="85i-ct-R9J"/>
                             <constraint firstItem="cKH-WG-9We" firstAttribute="centerX" secondItem="mqO-EX-zMU" secondAttribute="centerX" id="ALI-PK-xAI"/>
                             <constraint firstItem="ima-6Z-hW5" firstAttribute="centerY" secondItem="LUp-Up-pub" secondAttribute="centerY" id="C5K-RA-Ewx"/>
-                            <constraint firstItem="Lpr-Ey-Lxj" firstAttribute="trailing" secondItem="dia-Mc-SdT" secondAttribute="trailing" id="ClH-mD-uwS"/>
                             <constraint firstItem="zJP-my-GoN" firstAttribute="leading" secondItem="JK6-hm-bUf" secondAttribute="trailing" constant="8" id="E0D-VQ-Zcz"/>
                             <constraint firstItem="cKH-WG-9We" firstAttribute="centerY" secondItem="kDo-5Z-dmd" secondAttribute="centerY" id="F99-k8-LvT"/>
                             <constraint firstItem="wKW-zM-xm1" firstAttribute="leading" secondItem="HWd-G8-6b4" secondAttribute="leading" id="NUB-99-0QG"/>
@@ -230,7 +219,6 @@
                             <constraint firstItem="VDb-cc-FQF" firstAttribute="centerX" secondItem="UqE-YG-Lhx" secondAttribute="centerX" id="Tvi-sm-b4S"/>
                             <constraint firstItem="ima-6Z-hW5" firstAttribute="leading" secondItem="LUp-Up-pub" secondAttribute="trailing" constant="8" id="XuB-wR-nRJ"/>
                             <constraint firstItem="mqO-EX-zMU" firstAttribute="centerY" secondItem="acB-mU-hGp" secondAttribute="centerY" id="a0t-1Q-3PK"/>
-                            <constraint firstAttribute="bottom" secondItem="Lpr-Ey-Lxj" secondAttribute="bottom" id="adt-4h-24G"/>
                             <constraint firstAttribute="trailing" secondItem="llz-z2-Sax" secondAttribute="trailing" id="b0m-YL-m97"/>
                             <constraint firstItem="kDo-5Z-dmd" firstAttribute="centerX" secondItem="acB-mU-hGp" secondAttribute="centerX" id="b6J-60-MtZ"/>
                             <constraint firstItem="oxt-vh-3XL" firstAttribute="centerY" secondItem="kDo-5Z-dmd" secondAttribute="centerY" id="bFe-gT-cc3"/>
@@ -239,17 +227,15 @@
                             <constraint firstItem="UqE-YG-Lhx" firstAttribute="centerY" secondItem="acB-mU-hGp" secondAttribute="centerY" id="gJk-aC-0oF"/>
                             <constraint firstItem="s3v-R9-RFU" firstAttribute="leading" secondItem="wKW-zM-xm1" secondAttribute="trailing" constant="12" id="gfJ-pN-kFP"/>
                             <constraint firstItem="zJP-my-GoN" firstAttribute="centerY" secondItem="JK6-hm-bUf" secondAttribute="centerY" id="gib-oh-IGz"/>
-                            <constraint firstItem="Lpr-Ey-Lxj" firstAttribute="top" secondItem="llz-z2-Sax" secondAttribute="bottom" id="gzh-Jx-mrF"/>
                             <constraint firstItem="dia-Mc-SdT" firstAttribute="centerY" secondItem="s3v-R9-RFU" secondAttribute="centerY" id="hLR-bQ-XX9"/>
                             <constraint firstItem="rXD-sx-YAC" firstAttribute="top" secondItem="llz-z2-Sax" secondAttribute="bottom" id="i0d-nd-PsR"/>
                             <constraint firstAttribute="trailing" secondItem="dia-Mc-SdT" secondAttribute="trailing" constant="5" id="kmQ-w9-8DT"/>
                             <constraint firstItem="s3v-R9-RFU" firstAttribute="top" secondItem="HWd-G8-6b4" secondAttribute="top" constant="12" id="nPa-C0-zpV"/>
                             <constraint firstItem="LUp-Up-pub" firstAttribute="leading" secondItem="cKH-WG-9We" secondAttribute="leading" id="rwK-H0-wXw"/>
-                            <constraint firstItem="Lpr-Ey-Lxj" firstAttribute="centerY" secondItem="rXD-sx-YAC" secondAttribute="centerY" id="sL1-8c-fS0"/>
-                            <constraint firstItem="Lpr-Ey-Lxj" firstAttribute="leading" secondItem="rXD-sx-YAC" secondAttribute="trailing" constant="25" id="uVW-zw-TSk"/>
                             <constraint firstItem="LUp-Up-pub" firstAttribute="centerY" secondItem="JK6-hm-bUf" secondAttribute="centerY" id="unz-F0-qAX"/>
                             <constraint firstItem="kDo-5Z-dmd" firstAttribute="top" secondItem="acB-mU-hGp" secondAttribute="bottom" constant="10" id="vZX-0f-0ZM"/>
                             <constraint firstItem="2gG-DY-wgr" firstAttribute="leading" secondItem="mqO-EX-zMU" secondAttribute="trailing" constant="16" id="vut-rr-68Y"/>
+                            <constraint firstAttribute="trailing" secondItem="rXD-sx-YAC" secondAttribute="trailing" constant="15" id="zlH-Vj-dsI"/>
                             <constraint firstItem="2gG-DY-wgr" firstAttribute="centerY" secondItem="acB-mU-hGp" secondAttribute="centerY" id="zsx-X3-PpV"/>
                         </constraints>
                     </view>

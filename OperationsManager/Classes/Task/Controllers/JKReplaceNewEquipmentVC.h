@@ -8,10 +8,11 @@
 
 #import "JKBaseVC.h"
 @class JKDeviceModel;
+#import "JKContactModel.h"
 @protocol JKReplaceNewEquipmentVCDelegate <NSObject>
-- (void)newAddDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng;
-- (void)newChangeDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withNo:(NSInteger)no;
-- (void)newReplaceDevice:(JKDeviceModel *)model withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng;
+- (void)newAddDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng contactsModel:(JKContactsModel *)contactsModel;
+- (void)newChangeDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withNo:(NSInteger)no contactsModel:(JKContactsModel *)contactsModel;
+- (void)newReplaceDevice:(JKDeviceModel *)model withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng contactsModel:(JKContactsModel *)contactsModel;
 //- (void)
 @end
 

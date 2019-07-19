@@ -11,7 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol JKNewSensorConfigurationCellDelegate <NSObject>
-- (void)changeAutomatic:(BOOL)isAutomatic;
 - (void)changeSensorConfigurationSetting:(NSMutableArray *)dataSource;
 @end
 
@@ -20,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *dataSource;
 @property (nonatomic, strong) NSString *alertlineOneStr;
 @property (nonatomic, strong) NSString *alertlineTwoStr;
-@property (nonatomic, assign) BOOL isConnectLine;
+@property (nonatomic, assign) NSInteger connectionType;
+@property (nonatomic, copy) void(^matchingBlock)(NSInteger connectionType);
 @end
 NS_ASSUME_NONNULL_END

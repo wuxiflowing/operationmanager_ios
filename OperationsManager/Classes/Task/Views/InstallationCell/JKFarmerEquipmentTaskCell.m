@@ -6,10 +6,10 @@
 //  Copyright © 2019 周家康. All rights reserved.
 //
 
-#import "JKFarmerEquipmentMainCell.h"
+#import "JKFarmerEquipmentTaskCell.h"
 #import "JKDeviceModel.h"
 
-@interface JKFarmerEquipmentMainCell ()
+@interface JKFarmerEquipmentTaskCell ()
 @property (weak, nonatomic) IBOutlet UIView *bgContentView;
 @property (weak, nonatomic) IBOutlet UILabel *oxyValueLb;
 @property (weak, nonatomic) IBOutlet UILabel *pondNameLb;
@@ -36,7 +36,7 @@
 @property (nonatomic, assign) JKEquipmentType equipmentType;
 @end
 
-@implementation JKFarmerEquipmentMainCell
+@implementation JKFarmerEquipmentTaskCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -100,31 +100,32 @@
     
     [self setControlStatusWithView:self.control1Lb status:model.aeratorControlOne];
     [self setControlStatusWithView:self.control2Lb status:model.aeratorControlTwo];
-    if ([model.aeratorControlTree isKindOfClass:[NSNull class]]) {
-        self.control3Lb.hidden = YES;
-        self.control4Lb.hidden = YES;
-    }else{
-        [self setControlStatusWithView:self.control3Lb status:model.aeratorControlTree];
-        [self setControlStatusWithView:self.control4Lb status:model.aeratorControlFour];
-    }
-    
-    
     self.equimentStatus1Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlOne] isEqualToString:@"0"];
     self.equimentStatus2Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlTwo] isEqualToString:@"0"];
-    if ([model.statusControlTree isKindOfClass:[NSNull class]]) {
-        self.equimentStatus3Btn.hidden = YES;
-        self.equimentStatus4Btn.hidden = YES;
-    }else{
+    if (model.aeratorControlTree) {
+        [self setControlStatusWithView:self.control3Lb status:model.aeratorControlTree];
         self.equimentStatus3Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlTree] isEqualToString:@"0"];
-        self.equimentStatus4Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlFour] isEqualToString:@"0"];
+    }else{
+        self.control3Lb.hidden = YES;
+        self.equimentStatus3Btn.hidden = YES;
     }
+    if (model.aeratorControlFour) {
+        [self setControlStatusWithView:self.control4Lb status:model.aeratorControlFour];
+        self.equimentStatus4Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlFour] isEqualToString:@"0"];
+
+    }else{
+        self.control4Lb.hidden = YES;
+        self.equimentStatus4Btn.hidden = YES;
+    }
+    
+    
     
     if (model.workStatus==3) {
         self.oxyValueLb.text = @"--";
         self.temLb.text = @"--";
         self.phLb.text = @"--";
     }else{
-        self.oxyValueLb.text = [NSString stringWithFormat:@"%.1fml/L",model.dissolvedOxygen];
+        self.oxyValueLb.text = [NSString stringWithFormat:@"%.1f",model.dissolvedOxygen];
         self.temLb.text = [NSString stringWithFormat:@"%.1f ℃",model.temperature];
         if (model.ph == -1) {
             self.phLb.text = @"--";

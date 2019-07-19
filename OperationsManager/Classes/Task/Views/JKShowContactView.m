@@ -96,10 +96,16 @@
     // 判断为空进行初始化  --（当拉动页面显示超过主页面内容的时候就会重用之前的cell，而不会再次初始化）
     if (!cell) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    }else {
+        while ([cell.contentView.subviews lastObject] != nil) {
+            [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
+        }
     }
+    
     // 对cell 进行简单地数据配置
     UILabel *contactLb = [[UILabel alloc] init];
-    contactLb.text = [self.list objectAtIndex:indexPath.row];
+    JKContactModel *contactModel = [self.list objectAtIndex:indexPath.row];
+    contactLb.text = [NSString stringWithFormat:@"%@(%@)",contactModel.name,contactModel.phoneNumber];
     contactLb.textColor = RGBHex(0x333333);
     contactLb.textAlignment = NSTextAlignmentCenter;
     contactLb.font = JKFont(14);
@@ -113,9 +119,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self dismiss];
-    NSString *str = [self.list objectAtIndex:indexPath.row];
+    JKContactModel *contactModel = [self.list objectAtIndex:indexPath.row];
     if (self.ensureCotactBlock) {
-        self.ensureCotactBlock(str);
+        self.ensureCotactBlock(contactModel);
     }
 }
 

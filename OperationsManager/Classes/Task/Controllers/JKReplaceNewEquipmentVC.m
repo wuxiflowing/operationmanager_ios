@@ -19,6 +19,8 @@
 #import "JKGeoCodeSearchVC.h"
 #import "ZQAlterField.h"
 #import "JKShowContactView.h"
+#import "JKDeviceControlInfo.h"
+
 @interface JKReplaceNewEquipmentVC () <UITableViewDelegate, UITableViewDataSource, JKDeviceConfigurationCellDelegate,JKChoosePondViewDelegate, JKScanVCDelegate, JKNewSensorConfigurationCellDelegate, CLLocationManagerDelegate, JKGeoCodeSearchVCDelegate>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
@@ -34,7 +36,8 @@
 @property (nonatomic, assign) CGFloat lng;
 @property (nonatomic, strong) NSString *pondid;
 @property (nonatomic, strong) NSString *addrStr;
-@property (nonatomic, assign) BOOL isAutomatic;
+@property (nonatomic, strong) NSMutableArray *contactList;
+@property (nonatomic, strong) JKContactsModel *contactsModel;
 @end
 
 @implementation JKReplaceNewEquipmentVC
@@ -65,6 +68,20 @@
     return _dataSource;
 }
 
+- (NSMutableArray *)contactList{
+    if (!_contactList) {
+        _contactList = [[NSMutableArray alloc] init];
+    }
+    return _contactList;
+}
+
+- (JKContactsModel *)contactsModel{
+    if (!_contactsModel) {
+        _contactsModel = [JKContactsModel new];
+    }
+    return _contactsModel;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -74,7 +91,6 @@
         self.title = @"更换设备";
     }
     
-    self.isAutomatic = YES;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadControllerOneCell:)name:@"reloadControllerOneCell" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadControllerTwoCell:)name:@"reloadControllerTwoCell" object:nil];
@@ -91,13 +107,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self getAllContactList];
     if (self.deviceID != nil) {
         if (self.isFromRepairVC) {
+            [self getDeviceContactList];
             [self getDeviceInfo:self.deviceID];
         } else {
             [self checkDeviceTskID:self.deviceID];
         }
     }
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -221,18 +240,59 @@
     ZQAlterField *alertView = [ZQAlterField alertView];
     [alertView ensureClickBlock:^(NSString *nameString, NSString *phoneString) {
         NSLog(@"%@-%@",nameString,phoneString);
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [params setObject:nameString forKey:@"name"];
+        [params setObject:phoneString forKey:@"phoneNumber"];
+        NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/linkMan/%@/save",kUrl_Base,self.customerId];
+        
+        [YJProgressHUD showProgressCircleNoValue:nil inView:self.view];
+        [[JKHttpTool shareInstance] PutReceiveInfo:params url:urlStr successBlock:^(id responseObject) {
+            [YJProgressHUD hide];
+            if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
+                JKContactModel *contactModel = [JKContactModel new];
+                contactModel.linkManID = responseObject[@"data"][@"linkManID"];
+                contactModel.name = responseObject[@"data"][@"name"];
+                contactModel.phoneNumber = responseObject[@"data"][@"phoneNumber"];
+                [self.contactList addObject:contactModel];
+            }
+        } withFailureBlock:^(NSError *error) {
+            [YJProgressHUD hide];
+        }];
     }];
     [alertView show];
 }
 #pragma mark -- 选择联系人tag:1~4
 - (void)chooseContact:(NSInteger)tag{
     JKShowContactView *showContactView = [JKShowContactView showContactView];
-    showContactView.list = @[@"dd1",@"dd2",@"dd3",@"dd4"];
-    [showContactView ensureCotactClickBlock:^(NSString * _Nonnull contact) {
+    showContactView.list = self.contactList;
+    [showContactView ensureCotactClickBlock:^(JKContactModel * _Nonnull contact) {
         NSLog(@"%@",contact);
-        [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"reloadContactCell" object:nil userInfo:@{@"tag":@(tag),@"contact":contact}]];
+        switch (tag) {
+            case 1:
+                self.contactsModel.contacters = contact.name;
+                self.contactsModel.contactPhone = contact.phoneNumber;
+                break;
+            case 2:
+                self.contactsModel.nightContacters = contact.name;
+                self.contactsModel.nightContactPhone = contact.phoneNumber;
+                break;
+            case 3:
+                self.contactsModel.standbyContact = contact.name;
+                self.contactsModel.standbyContactPhone = contact.phoneNumber;
+                break;
+            case 4:
+                self.contactsModel.standbynightContact = contact.name;
+                self.contactsModel.standbynightContactPhone = contact.phoneNumber;
+                break;
+                
+            default:
+                break;
+        }
+        [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"reloadContactCell" object:nil userInfo:@{@"tag":@(tag),@"contact":[NSString stringWithFormat:@"%@(%@)",contact.name,contact.phoneNumber]}]];
     }];
     [showContactView show];
+    
+
 }
 
 - (void)showPondName:(NSString *)pondName withPondId:(NSString *)pondId {
@@ -268,7 +328,6 @@
 
 #pragma mark -- 开/关
 - (void)getDeviceControlState:(NSString *)state withTskID:(NSString *)tskID{
-    NSInteger stateInt = [state integerValue];
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     [params setObject:state forKey:@"powerControl"];
     
@@ -337,7 +396,7 @@
 #pragma mark -- 设备信息
 - (void)getDeviceInfo:(NSString *)tskID {
     self.tskID = tskID;
-    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/device/%@",kUrl_Base,tskID];
+    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/device/new/%@",kUrl_Base,@"000005"];
     
     [[JKHttpTool shareInstance] GetReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
         if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
@@ -348,39 +407,40 @@
             model.deviceId = [NSString stringWithFormat:@"%@",dict[@"identifier"]];
             model.name = [NSString stringWithFormat:@"%@",dict[@"name"]];
             model.type = [NSString stringWithFormat:@"%@",dict[@"type"]];
-            model.dissolvedOxygen = [dict[@"dissolvedOxygen"] floatValue];
-            model.temperature = [dict[@"temperature"] floatValue];
-            model.ph = [dict[@"ph"] floatValue];
-            model.automatic = dict[@"automatic"];
             model.workStatus = [dict[@"workStatus"] integerValue];
-            model.oxyLimitUp = [dict[@"oxyLimitUp"] floatValue];
-            model.oxyLimitDownOne = [dict[@"oxyLimitDownOne"] floatValue];
-            model.oxyLimitDownTwo = [[NSString stringWithFormat:@"%@",dict[@"oxyLimitDownTwo"]] floatValue];
-            model.alertlineOne = [dict[@"alertlineOne"] floatValue];
-            model.alertlineTwo = [dict[@"alertlineTwo"] floatValue];
-            model.aeratorControls = dict[@"aeratorControlList"];
-            if (![model.aeratorControls isKindOfClass:[NSNull class]]) {
-                if (model.aeratorControls.count != 0) {
-                    model.openA = model.aeratorControls[0][@"open"];
-                    model.powerA = [NSString stringWithFormat:@"%.1f",[model.aeratorControls[0][@"power"] floatValue]];
-                    model.ammeterIdA = model.aeratorControls[0][@"ammeterId"];
-                    model.hasAmmeterA = model.aeratorControls[0][@"hasAmmeter"];
-                    model.voltageUpA = [NSString stringWithFormat:@"%.1f",[model.aeratorControls[0][@"voltageUp"] floatValue]];
-                    model.voltageDownA = [NSString stringWithFormat:@"%.1f",[model.aeratorControls[0][@"voltageDown"] floatValue]];
-                    model.electricCurrentUpA = [NSString stringWithFormat:@"%.1f",[model.aeratorControls[0][@"electricCurrentUp"] floatValue]];
-                    model.electricCurrentDownA = [NSString stringWithFormat:@"%.1f",[model.aeratorControls[0][@"electricCurrentDown"] floatValue]];
-                    model.aeratorNameA = model.aeratorControls[0][@"name"];
-                    model.openB = model.aeratorControls[1][@"open"];
-                    model.powerB = [NSString stringWithFormat:@"%.1f",[model.aeratorControls[1][@"power"] floatValue]];
-                    model.ammeterIdB = model.aeratorControls[1][@"ammeterId"];
-                    model.hasAmmeterB = model.aeratorControls[1][@"hasAmmeter"];
-                    model.voltageUpB = [NSString stringWithFormat:@"%.1f",[model.aeratorControls[1][@"voltageUp"] floatValue]];
-                    model.voltageDownB = [NSString stringWithFormat:@"%.1f",[model.aeratorControls[1][@"voltageDown"] floatValue]];
-                    model.electricCurrentUpB = [NSString stringWithFormat:@"%.1f",[model.aeratorControls[1][@"electricCurrentUp"] floatValue]];
-                    model.electricCurrentDownB = [NSString stringWithFormat:@"%.1f",[model.aeratorControls[1][@"electricCurrentDown"] floatValue]];
-                    model.aeratorNameB = model.aeratorControls[1][@"name"];
+            model.deviceControlInfoBeanList = dict[@"deviceControlInfoBeanList"];
+            model.oxy = [dict[@"oxy"] floatValue];
+            model.temp = [dict[@"temp"] floatValue];
+            model.ph = [dict[@"ph"] floatValue];
+            model.connectionType = [dict[@"connectionType"] integerValue];
+            model.alertlineOne = [dict[@"alertline1"] floatValue];
+            model.alertlineTwo = [dict[@"alertline2"] floatValue];
+            if (![model.deviceControlInfoBeanList isKindOfClass:[NSNull class]]) {
+                if (model.deviceControlInfoBeanList.count != 0) {
+                    for (NSInteger i = 0; i<4; i++) {
+                        NSDictionary *dic = [model.deviceControlInfoBeanList objectAtIndex:i];
+                        JKDeviceControlInfo *dviceControl = [JKDeviceControlInfo new];
+                        dviceControl.controlId = [dic[@"controlId"] integerValue];
+                        dviceControl.oxyLimitUp = [dic[@"oxyLimitUp"] floatValue];
+                        dviceControl.oxyLimitDown = [dic[@"oxyLimitDown"] floatValue];
+                        dviceControl.electricityUp = [dic[@"electricityUp"] floatValue];
+                        dviceControl.electricityDown = [dic[@"electricityDown"] floatValue];
+                        dviceControl.open = [JKSafeNull(dic[@"open"]) integerValue];
+                        dviceControl.isAuto = [JKSafeNull(dic[@"isAuto"]) integerValue];
+                        if (i == 0) {
+                            model.controlInfo1 = dviceControl;
+                        }
+                        if (i == 1) {
+                            model.controlInfo2 = dviceControl;
+                        }
+                        if (i == 2) {
+                            model.controlInfo3 = dviceControl;
+                        }
+                        if (i == 3) {
+                            model.controlInfo4 = dviceControl;
+                        }
+                    }
                 }
-                
             }
             
             [self.dataSource addObject:model];
@@ -390,6 +450,58 @@
         [self.tableView reloadData];
     } withFailureBlock:^(NSError *error) {
         
+    }];
+}
+
+#pragma mark -- 获取所有联系人列表
+- (void)getAllContactList{
+    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/linkMan/farmerId/%@",kUrl_Base,self.customerId];
+    [YJProgressHUD showProgressCircleNoValue:nil inView:self.view];
+    [[JKHttpTool shareInstance] GetReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+        [YJProgressHUD hide];
+        if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
+            NSArray *contacts =  responseObject[@"data"];
+            [self.contactList removeAllObjects];
+            for (NSDictionary *dic in contacts) {
+                JKContactModel *contactModel = [JKContactModel new];
+                contactModel.linkManID = dic[@"linkManID"];
+                contactModel.name = dic[@"name"];
+                contactModel.phoneNumber = dic[@"phoneNumber"];
+                [self.contactList addObject:contactModel];
+            }
+            
+        }
+    } withFailureBlock:^(NSError *error) {
+        [YJProgressHUD hide];
+    }];
+}
+
+#pragma mark -- 根据设备id获取绑定的设备联系人
+- (void)getDeviceContactList{
+    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/linkMan/deviceId/%@",kUrl_Base,self.deviceID];
+    [YJProgressHUD showProgressCircleNoValue:nil inView:self.view];
+    [[JKHttpTool shareInstance] GetReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+        [YJProgressHUD hide];
+        if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
+            NSArray *contacts =  responseObject[@"data"];
+            [self.contactList removeAllObjects];
+            for (NSDictionary *dic in contacts) {
+                JKContactsModel *contactsModel = [JKContactsModel new];
+                contactsModel.contacters = dic[@"contacters"];
+                contactsModel.contactPhone = dic[@"contactPhone"];
+                contactsModel.nightContacters = dic[@"nightContacters"];
+                contactsModel.nightContactPhone = dic[@"nightContactPhone"];
+                contactsModel.standbyContact = dic[@"standbyContact"];
+                contactsModel.standbyContactPhone = dic[@"standbyContactPhone"];
+                contactsModel.standbynightContact = dic[@"standbynightContact"];
+                contactsModel.standbynightContactPhone = dic[@"standbynightContactPhone"];
+                [self.contactList addObject:contactsModel];
+            }
+            self.contactsModel = (JKContactsModel *)[self.contactList firstObject];
+        }
+        [self.tableView reloadData];
+    } withFailureBlock:^(NSError *error) {
+        [YJProgressHUD hide];
     }];
 }
 
@@ -448,69 +560,113 @@
     
     
     NSMutableDictionary *dict1 = [[NSMutableDictionary alloc] init];
-    [dict1 setObject:@"1" forKey:@"ammeterId"];
-    if (self.ccgoCell.electricCurrentDownA == nil) {
-        [dict1 setObject:@(0) forKey:@"electricCurrentDown"];
-    } else {
-        [dict1 setObject:self.ccgoCell.electricCurrentDownA forKey:@"electricCurrentDown"];
-    }
+    [dict1 setObject:@(0) forKey:@"controlId"];
     if (self.ccgoCell.electricCurrentUpA == nil) {
-        [dict1 setObject:@(0)  forKey:@"electricCurrentUp"];
+        [dict1 setObject:@(0)  forKey:@"electricityUp"];
     } else {
-        [dict1 setObject:self.ccgoCell.electricCurrentUpA  forKey:@"electricCurrentUp"];
+        [dict1 setObject:self.ccgoCell.electricCurrentUpA  forKey:@"electricityUp"];
     }
-
-
-    if (self.ccgoCell.oxygenUpA == nil) {
-        [dict1 setObject:@(0) forKey:@"voltageUp"];
+    if (self.ccgoCell.electricCurrentDownA == nil) {
+        [dict1 setObject:@(0) forKey:@"electricityDown"];
     } else {
-        [dict1 setObject:self.ccgoCell.oxygenUpA forKey:@"voltageUp"];
+        [dict1 setObject:self.ccgoCell.electricCurrentDownA forKey:@"electricityDown"];
+    }
+    if (self.ccgoCell.oxygenUpA == nil) {
+        [dict1 setObject:@(0) forKey:@"oxyLimitUp"];
+    } else {
+        [dict1 setObject:self.ccgoCell.oxygenUpA forKey:@"oxyLimitUp"];
     }
     if (self.ccgoCell.oxygenDownA == nil) {
-        [dict1 setObject:@(0) forKey:@"voltageDown"];
+        [dict1 setObject:@(0) forKey:@"oxyLimitDown"];
     } else {
-        [dict1 setObject:self.ccgoCell.oxygenDownA forKey:@"voltageDown"];
+        [dict1 setObject:self.ccgoCell.oxygenDownA forKey:@"oxyLimitDown"];
     }
     
+    
     NSMutableDictionary *dict2 = [[NSMutableDictionary alloc] init];
-    [dict2 setObject:@"2" forKey:@"ammeterId"];
+    [dict2 setObject:@(1) forKey:@"controlId"];
     if (self.ccgtCell.electricCurrentUpB == nil) {
-        [dict2 setObject:@(0)  forKey:@"electricCurrentUp"];
+        [dict2 setObject:@(0)  forKey:@"electricityUp"];
     } else {
-        [dict2 setObject:self.ccgtCell.electricCurrentUpB  forKey:@"electricCurrentUp"];
+        [dict2 setObject:self.ccgtCell.electricCurrentUpB  forKey:@"electricityUp"];
     }
     if (self.ccgtCell.electricCurrentDownB == nil) {
-        [dict2 setObject:@(0) forKey:@"electricCurrentDown"];
+        [dict2 setObject:@(0) forKey:@"electricityDown"];
     } else {
-        [dict2 setObject:self.ccgtCell.electricCurrentDownB forKey:@"electricCurrentDown"];
+        [dict2 setObject:self.ccgtCell.electricCurrentDownB forKey:@"electricityDown"];
     }
-
 
     if (self.ccgtCell.oxygenUpB == nil) {
-        [dict2 setObject:@(0) forKey:@"voltageUp"];
+        [dict2 setObject:@(0) forKey:@"oxyLimitUp"];
     } else {
-        [dict2 setObject:self.ccgtCell.oxygenUpB forKey:@"voltageUp"];
+        [dict2 setObject:self.ccgtCell.oxygenUpB forKey:@"oxyLimitUp"];
     }
     if (self.ccgtCell.oxygenDownB == nil) {
-        [dict2 setObject:@(0) forKey:@"voltageDown"];
+        [dict2 setObject:@(0) forKey:@"oxyLimitDown"];
     } else {
-        [dict2 setObject:self.ccgtCell.oxygenDownB forKey:@"voltageDown"];
+        [dict2 setObject:self.ccgtCell.oxygenDownB forKey:@"oxyLimitDown"];
     }
+    
+    NSMutableDictionary *dict3 = [[NSMutableDictionary alloc] init];
+    [dict3 setObject:@(2) forKey:@"controlId"];
+    if (self.ccgthCell.electricCurrentUpC == nil) {
+        [dict3 setObject:@(0)  forKey:@"electricityUp"];
+    } else {
+        [dict3 setObject:self.ccgthCell.electricCurrentUpC  forKey:@"electricityUp"];
+    }
+    if (self.ccgthCell.electricCurrentDownC == nil) {
+        [dict3 setObject:@(0) forKey:@"electricityDown"];
+    } else {
+        [dict3 setObject:self.ccgthCell.electricCurrentDownC forKey:@"electricityDown"];
+    }
+    
+    if (self.ccgthCell.oxygenUpC == nil) {
+        [dict3 setObject:@(0) forKey:@"oxyLimitUp"];
+    } else {
+        [dict3 setObject:self.ccgthCell.oxygenUpC forKey:@"oxyLimitUp"];
+    }
+    if (self.ccgthCell.oxygenDownC == nil) {
+        [dict3 setObject:@(0) forKey:@"oxyLimitDown"];
+    } else {
+        [dict3 setObject:self.ccgthCell.oxygenDownC forKey:@"oxyLimitDown"];
+    }
+    
+    NSMutableDictionary *dict4 = [[NSMutableDictionary alloc] init];
+    [dict4 setObject:@(3) forKey:@"controlId"];
+    if (self.ccgfCell.electricCurrentUpD == nil) {
+        [dict4 setObject:@(0)  forKey:@"electricityUp"];
+    } else {
+        [dict4 setObject:self.ccgfCell.electricCurrentUpD  forKey:@"electricityUp"];
+    }
+    if (self.ccgfCell.electricCurrentDownD == nil) {
+        [dict4 setObject:@(0) forKey:@"electricityDown"];
+    } else {
+        [dict4 setObject:self.ccgfCell.electricCurrentDownD forKey:@"electricityDown"];
+    }
+    
+    if (self.ccgfCell.oxygenUpD == nil) {
+        [dict4 setObject:@(0) forKey:@"oxyLimitUp"];
+    } else {
+        [dict4 setObject:self.ccgfCell.oxygenUpD forKey:@"oxyLimitUp"];
+    }
+    if (self.ccgfCell.oxygenDownD == nil) {
+        [dict4 setObject:@(0) forKey:@"oxyLimitDown"];
+    } else {
+        [dict4 setObject:self.ccgfCell.oxygenDownD forKey:@"oxyLimitDown"];
+    }
+    
     NSMutableArray *arr = [[NSMutableArray alloc] init];
     [arr addObject:dict1];
     [arr addObject:dict2];
+    [arr addObject:dict3];
+    [arr addObject:dict4];
     
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    [params setObject:arr forKey:@"aeratorControlList"];
-    [params setObject:self.scgCell.alertlineOneStr forKey:@"alertlineOne"];
-    [params setObject:self.scgCell.alertlineTwoStr forKey:@"alertlineTwo"];
-    if (self.isAutomatic) {
-        [params setObject:@"true" forKey:@"automatic"];
-    } else {
-        [params setObject:@"false" forKey:@"automatic"];
-    }
+    [params setObject:arr forKey:@"deviceControlInfoBeanList"];
+    [params setObject:self.scgCell.alertlineOneStr forKey:@"alertline1"];
+    [params setObject:self.scgCell.alertlineTwoStr forKey:@"alertline2"];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/device/%@",kUrl_Base,self.tskID];
+    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/newDevice/%@",kUrl_Base,self.tskID];
     [YJProgressHUD showProgressCircleNoValue:@"保存中..." inView:self.view];
     [[JKHttpTool shareInstance] PutReceiveInfo:params url:urlStr successBlock:^(id responseObject) {
         [YJProgressHUD hide];
@@ -520,18 +676,18 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (self.isSet) {
                     JKDeviceModel *model = self.dataSource[0];
-                    if ([self->_delegate respondsToSelector:@selector(newChangeDevice:withPondName:withPondId:withNo:)]) {
-                        [self->_delegate newChangeDevice:model withPondName:self.dcgCell.pondName withPondId:self.dcgCell.pondId withNo:self.no];
+                    if ([self->_delegate respondsToSelector:@selector(newChangeDevice:withPondName:withPondId:withNo:contactsModel:)]) {
+                        [self->_delegate newChangeDevice:model withPondName:self.dcgCell.pondName withPondId:self.dcgCell.pondId withNo:self.no contactsModel:self.contactsModel];
                     }
                 } else {
                     JKDeviceModel *model = self.dataSource[0];
                     if (self.type == JKEquipmentInfoTypeRepaire) {
-                        if ([self->_delegate respondsToSelector:@selector(newReplaceDevice:withPondAddr:withLat:withLng:)]) {
-                            [self->_delegate newReplaceDevice:model withPondAddr:self.addrStr withLat:self.lat withLng:self.lng];
+                        if ([self->_delegate respondsToSelector:@selector(newReplaceDevice:withPondAddr:withLat:withLng:contactsModel:)]) {
+                            [self->_delegate newReplaceDevice:model withPondAddr:self.addrStr withLat:self.lat withLng:self.lng contactsModel:self.contactsModel];
                         }
                     } else {
-                        if ([self->_delegate respondsToSelector:@selector(newAddDevice:withPondName:withPondId:withPondAddr:withLat:withLng:)]) {
-                            [self->_delegate newAddDevice:model withPondName:self.dcgCell.pondName withPondId:self.pondid withPondAddr:self.addrStr withLat:self.lat withLng:self.lng];
+                        if ([self->_delegate respondsToSelector:@selector(newAddDevice:withPondName:withPondId:withPondAddr:withLat:withLng:contactsModel:)]) {
+                            [self->_delegate newAddDevice:model withPondName:self.dcgCell.pondName withPondId:self.pondid withPondAddr:self.addrStr withLat:self.lat withLng:self.lng contactsModel:self.contactsModel];
                         }
                     }
                 }
@@ -545,9 +701,7 @@
     }];
 }
 
-- (void)changeAutomatic:(BOOL)isAutomatic {
-    self.isAutomatic = isAutomatic;
-}
+
 
 - (void)changeSensorConfigurationSetting:(NSMutableArray *)dataSource {
     self.dataSource = dataSource;
@@ -589,6 +743,9 @@
         cell.addrStr = self.addrStr;
         self.dcgCell = cell;
         cell.equipmentType = JKEquipmentType_New;
+        if (self.isFromRepairVC) {
+            cell.contactsModel = self.contactsModel;
+        }
         [cell createUI];
         return cell;
     } else if (indexPath.row == 1) {
@@ -601,6 +758,24 @@
         self.scgCell = cell;
         cell.dataSource = self.dataSource;
         cell.delegate = self;
+        cell.matchingBlock = ^(NSInteger connectionType) {
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            [params setObject:[NSString stringWithFormat:@"%zd",connectionType] forKey:@"pairType"];
+            NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/device/%@/devicePair",kUrl_Base,self.tskID];
+            
+            [[JKHttpTool shareInstance] PutReceiveInfo:params url:urlStr successBlock:^(id responseObject) {
+                if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
+                    [YJProgressHUD showMessage:@"配对成功" inView:self.view];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self getDeviceInfo:self.tskID];
+                    });
+                } else {
+                    [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
+                }
+                [self.tableView reloadData];
+            } withFailureBlock:^(NSError *error) {
+            }];
+        };
         return cell;
     } else if (indexPath.row == 6) {
         static NSString *ID = @"cell";
@@ -671,14 +846,11 @@
                 cell.dataSource = self.dataSource;
             }
             cell.controlCallBack = ^(NSString * _Nonnull controlState) {
-                NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-                [params setObject:controlState forKey:@"powerControl"];
-                
-                NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/device/%@/updateCommand",kUrl_Base,self.tskID];
-                
-                [[JKHttpTool shareInstance] PutReceiveInfo:params url:urlStr successBlock:^(id responseObject) {
-                    if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
-                        if ([controlState isEqualToString:@"1"]) {
+                NSString *state = [controlState isEqualToString:@"1"]?@"on":@"off";
+                NSString *urlStr = [NSString stringWithFormat:@"%@/v1/deviceMonitor/core/device/identifier/%@/control/0/switch/%@",kUrl_Base,self.tskID,state];
+                [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+                    if (![responseObject[@"err"] boolValue]) {
+                        if ([responseObject[@"state"] isEqualToString:@"on"]) {
                             [YJProgressHUD showMessage:@"已开启" inView:self.view];
                         } else {
                             [YJProgressHUD showMessage:@"已关闭" inView:self.view];
@@ -686,7 +858,7 @@
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [self getDeviceInfo:self.tskID];
                         });
-                    } else {
+                    }else{
                         [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
                     }
                     [self.tableView reloadData];
@@ -708,14 +880,11 @@
                 cell.dataSource = self.dataSource;
             }
             cell.controlCallBack = ^(NSString * _Nonnull controlState) {
-                NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-                [params setObject:controlState forKey:@"powerControl"];
-                
-                NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/device/%@/updateCommand",kUrl_Base,self.tskID];
-                
-                [[JKHttpTool shareInstance] PutReceiveInfo:params url:urlStr successBlock:^(id responseObject) {
-                    if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
-                        if ([controlState isEqualToString:@"1"]) {
+                NSString *state = [controlState isEqualToString:@"1"]?@"on":@"off";
+                NSString *urlStr = [NSString stringWithFormat:@"%@/v1/deviceMonitor/core/device/identifier/%@/control/1/switch/%@",kUrl_Base,self.tskID,state];
+                [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+                    if (![responseObject[@"err"] boolValue]) {
+                        if ([responseObject[@"state"] isEqualToString:@"on"]) {
                             [YJProgressHUD showMessage:@"已开启" inView:self.view];
                         } else {
                             [YJProgressHUD showMessage:@"已关闭" inView:self.view];
@@ -723,7 +892,7 @@
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [self getDeviceInfo:self.tskID];
                         });
-                    } else {
+                    }else{
                         [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
                     }
                     [self.tableView reloadData];
@@ -745,14 +914,11 @@
                 cell.dataSource = self.dataSource;
             }
             cell.controlCallBack = ^(NSString * _Nonnull controlState) {
-                NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-                [params setObject:controlState forKey:@"powerControl"];
-                
-                NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/device/%@/updateCommand",kUrl_Base,self.tskID];
-                
-                [[JKHttpTool shareInstance] PutReceiveInfo:params url:urlStr successBlock:^(id responseObject) {
-                    if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
-                        if ([controlState isEqualToString:@"1"]) {
+                NSString *state = [controlState isEqualToString:@"1"]?@"on":@"off";
+                NSString *urlStr = [NSString stringWithFormat:@"%@/v1/deviceMonitor/core/device/identifier/%@/control/2/switch/%@",kUrl_Base,self.tskID,state];
+                [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+                    if (![responseObject[@"err"] boolValue]) {
+                        if ([responseObject[@"state"] isEqualToString:@"on"]) {
                             [YJProgressHUD showMessage:@"已开启" inView:self.view];
                         } else {
                             [YJProgressHUD showMessage:@"已关闭" inView:self.view];
@@ -760,7 +926,7 @@
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [self getDeviceInfo:self.tskID];
                         });
-                    } else {
+                    }else{
                         [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
                     }
                     [self.tableView reloadData];
@@ -782,14 +948,11 @@
                 cell.dataSource = self.dataSource;
             }
             cell.controlCallBack = ^(NSString * _Nonnull controlState) {
-                NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-                [params setObject:controlState forKey:@"powerControl"];
-                
-                NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/device/%@/updateCommand",kUrl_Base,self.tskID];
-                
-                [[JKHttpTool shareInstance] PutReceiveInfo:params url:urlStr successBlock:^(id responseObject) {
-                    if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
-                        if ([controlState isEqualToString:@"1"]) {
+                NSString *state = [controlState isEqualToString:@"1"]?@"on":@"off";
+                NSString *urlStr = [NSString stringWithFormat:@"%@/v1/deviceMonitor/core/device/identifier/%@/control/3/switch/%@",kUrl_Base,self.tskID,state];
+                [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+                    if (![responseObject[@"err"] boolValue]) {
+                        if ([responseObject[@"state"] isEqualToString:@"on"]) {
                             [YJProgressHUD showMessage:@"已开启" inView:self.view];
                         } else {
                             [YJProgressHUD showMessage:@"已关闭" inView:self.view];
@@ -797,7 +960,7 @@
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [self getDeviceInfo:self.tskID];
                         });
-                    } else {
+                    }else{
                         [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
                     }
                     [self.tableView reloadData];

@@ -5,7 +5,14 @@
 //  Created by    on 2018/8/13.
 //  Copyright © 2018年   . All rights reserved.
 //
-
+//contactPhone                           白班联系人电话
+//contacters                                白班联系人姓名
+//standbyContact                       白班备用联系人姓名
+//standbyContactPhone             白班备用联系人电话
+//nightContactPhone                 晚班联系人电话
+//nightContacters                      晚班联系人姓名
+//standbyNightContact             晚班备用联系人姓名
+//standbyNightContactPhone   晚班备用联系人电话
 #import "JKInstallIngInfoVC.h"
 #import "JKTaskTopCell.h"
 #import "JKInstallationOrderCell.h"
@@ -16,8 +23,9 @@
 #import "JKReplaceNewEquipmentVC.h"
 #import "JKDeviceModel.h"
 #import "JKEquipmentInfoVC.h"
+#import "JKNewEquipmentInfoVC.h"
 #import "JKInstallationVC.h"
-#import "JKFarmerEquipmentMainCell.h"
+#import "JKFarmerEquipmentTaskCell.h"
 @interface JKInstallIngInfoVC () <UITableViewDelegate, UITableViewDataSource,JKReplaceEquipmentVCDelegate,JKReplaceNewEquipmentVCDelegate,JKFarmerEquipmentMainCellDelegate, JKTaskTopCellDelegate,JKInstallationOrderCellDelegate>
 {
     BOOL _isServiceOn;
@@ -334,6 +342,31 @@
         [deviceDic setObject:model.addr forKey:@"pondAddr"];
         [deviceDic setObject:[NSString stringWithFormat:@"%f",model.lat] forKey:@"latitude"];
         [deviceDic setObject:[NSString stringWithFormat:@"%f",model.lng] forKey:@"longitude"];
+        if (model.contactsModel.contacters) {
+            [deviceDic setObject:model.contactsModel.contacters forKey:@"contacters"];
+        }
+        if (model.contactsModel.contactPhone) {
+            [deviceDic setObject:model.contactsModel.contactPhone forKey:@"contactPhone"];
+        }
+        if (model.contactsModel.standbyContact) {
+            [deviceDic setObject:model.contactsModel.standbyContact forKey:@"standbyContact"];
+        }
+        if (model.contactsModel.standbyContactPhone) {
+            [deviceDic setObject:model.contactsModel.standbyContactPhone forKey:@"standbyContactPhone"];
+        }
+        if (model.contactsModel.nightContacters) {
+            [deviceDic setObject:model.contactsModel.nightContacters forKey:@"nightContacters"];
+        }
+        if (model.contactsModel.nightContactPhone) {
+            [deviceDic setObject:model.contactsModel.nightContactPhone forKey:@"nightContactPhone"];
+        }
+        if (model.contactsModel.standbynightContact) {
+            [deviceDic setObject:model.contactsModel.standbynightContact forKey:@"standbynightContact"];
+        }
+        if (model.contactsModel.standbynightContactPhone) {
+            [deviceDic setObject:model.contactsModel.standbynightContactPhone forKey:@"standbynightContactPhone"];
+        }
+        
         [self.deviceInfoArr addObject:deviceDic];
     }
     
@@ -597,7 +630,7 @@
     [self.navigationController pushViewController:reVC animated:YES];
 }
 
-- (void)addDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng{
+- (void)addDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng contactsModel:(JKContactsModel *)contactsModel{
     JKDeviceModel *dModel = [[JKDeviceModel alloc] init];
     dModel.deviceId = model.deviceId;
     dModel.name = pondName;
@@ -606,13 +639,19 @@
     dModel.dissolvedOxygen = model.dissolvedOxygen;
     dModel.temperature = model.temperature;
     dModel.ph = model.ph;
-    dModel.alarmType = model.alarmType;
-    dModel.aeratorControls = model.aeratorControls;
-    dModel.automatic = model.automatic;
     dModel.workStatus = model.workStatus;
+    dModel.aeratorControlOne = model.aeratorControls[0][@"open"];
+    dModel.aeratorControlTwo = model.aeratorControls[1][@"open"];
+    dModel.statusControlOne = model.aeratorControls[0][@"automatic"];
+    dModel.statusControlTwo = model.aeratorControls[1][@"automatic"];
+
+    dModel.aeratorControls = model.aeratorControls;
+    dModel.alarmType = model.alarmType;
+    dModel.automatic = model.automatic;
     dModel.addr = pondAddr;
     dModel.lat = lat;
     dModel.lng = lng;
+    dModel.contactsModel = contactsModel;
     [self.addDeviceArr addObject:dModel];
 //    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:_indexCell inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
     [self.tableView reloadData];
@@ -623,8 +662,8 @@
     [self.tableView reloadData];
 }
 
-- (void)changeDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withNo:(NSInteger)no{
-    JKDeviceModel *dModel = self.addDeviceArr[no - 3];
+- (void)changeDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withNo:(NSInteger)no contactsModel:(JKContactsModel *)contactsModel{
+    JKDeviceModel *dModel = [[JKDeviceModel alloc] init];
     dModel.deviceId = model.deviceId;
     dModel.name = pondName;
     dModel.pondId = pondId;
@@ -632,11 +671,17 @@
     dModel.dissolvedOxygen = model.dissolvedOxygen;
     dModel.temperature = model.temperature;
     dModel.ph = model.ph;
-    dModel.alarmType = model.alarmType;
-    dModel.aeratorControls = model.aeratorControls;
-    dModel.automatic = model.automatic;
     dModel.workStatus = model.workStatus;
-    [self.tableView reloadData];
+    dModel.aeratorControlOne = model.aeratorControls[0][@"open"];
+    dModel.aeratorControlTwo = model.aeratorControls[1][@"open"];
+    dModel.statusControlOne = model.aeratorControls[0][@"automatic"];
+    dModel.statusControlTwo = model.aeratorControls[1][@"automatic"];
+    
+    dModel.aeratorControls = model.aeratorControls;
+    dModel.alarmType = model.alarmType;
+    dModel.automatic = model.automatic;
+    dModel.contactsModel = contactsModel;
+    [self.addDeviceArr addObject:dModel];
     
     for (JKDeviceModel *dModel in self.addDeviceArr) {
         NSLog(@"%@",dModel.deviceId);
@@ -656,39 +701,55 @@
     [self.navigationController pushViewController:reVC animated:YES];
 }
 
-- (void)newAddDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng{
+- (void)newAddDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withPondAddr:(NSString *)pondAddr withLat:(CGFloat)lat withLng:(CGFloat)lng contactsModel:(JKContactsModel *)contactsModel{
     JKDeviceModel *dModel = [[JKDeviceModel alloc] init];
     dModel.deviceId = model.deviceId;
     dModel.name = pondName;
     dModel.pondId = pondId;
     dModel.type = model.type;
-    dModel.dissolvedOxygen = model.dissolvedOxygen;
-    dModel.temperature = model.temperature;
+    dModel.dissolvedOxygen = model.oxy;
+    dModel.temperature = model.temp;
     dModel.ph = model.ph;
-    dModel.alarmType = model.alarmType;
-    dModel.aeratorControls = model.aeratorControls;
-    dModel.automatic = model.automatic;
     dModel.workStatus = model.workStatus;
+    
+    dModel.aeratorControlOne = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[0][@"open"]];
+    dModel.aeratorControlTwo = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[1][@"open"]];
+    dModel.aeratorControlTree = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[2][@"open"]];
+    dModel.aeratorControlFour = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[3][@"open"]];
+    dModel.statusControlOne = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[0][@"auto"]];
+    dModel.statusControlTwo = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[1][@"auto"]];
+    dModel.statusControlTree = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[2][@"auto"]];
+    dModel.statusControlFour = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[3][@"auto"]];
+    
     dModel.addr = pondAddr;
     dModel.lat = lat;
     dModel.lng = lng;
+    dModel.contactsModel = contactsModel;
     [self.addDeviceArr addObject:dModel];
     //    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:_indexCell inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
     [self.tableView reloadData];
 }
-- (void)newChangeDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withNo:(NSInteger)no{
-    JKDeviceModel *dModel = self.addDeviceArr[no - 3];
+- (void)newChangeDevice:(JKDeviceModel *)model withPondName:(NSString *)pondName withPondId:(NSString *)pondId withNo:(NSInteger)no contactsModel:(JKContactsModel *)contactsModel{
+    JKDeviceModel *dModel = [[JKDeviceModel alloc] init];
     dModel.deviceId = model.deviceId;
     dModel.name = pondName;
     dModel.pondId = pondId;
     dModel.type = model.type;
-    dModel.dissolvedOxygen = model.dissolvedOxygen;
-    dModel.temperature = model.temperature;
+    dModel.dissolvedOxygen = model.oxy;
+    dModel.temperature = model.temp;
     dModel.ph = model.ph;
-    dModel.alarmType = model.alarmType;
-    dModel.aeratorControls = model.aeratorControls;
-    dModel.automatic = model.automatic;
     dModel.workStatus = model.workStatus;
+    
+    dModel.aeratorControlOne = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[0][@"open"]];
+    dModel.aeratorControlTwo = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[1][@"open"]];
+    dModel.aeratorControlTree = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[2][@"open"]];
+    dModel.aeratorControlFour = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[3][@"open"]];
+    dModel.statusControlOne = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[0][@"auto"]];
+    dModel.statusControlTwo = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[1][@"auto"]];
+    dModel.statusControlTree = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[2][@"auto"]];
+    dModel.statusControlFour = [NSString stringWithFormat:@"%@",model.deviceControlInfoBeanList[3][@"auto"]];
+    
+    dModel.contactsModel = contactsModel;
     [self.tableView reloadData];
     
     for (JKDeviceModel *dModel in self.addDeviceArr) {
@@ -759,7 +820,7 @@
     } else if (indexPath.row == (self.addDeviceArr.count + 6 - 3)) {
         return 88;
     } else {
-        return 306 - 48;
+        return 195;
     }
 }
 
@@ -937,11 +998,13 @@
         
         return cell;
     } else {
-        static NSString *ID = @"JKFarmerEquipmentMainCell";
-        JKFarmerEquipmentMainCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-        if(!cell){
-            cell = [[JKFarmerEquipmentMainCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ID];
+        NSString *cellIdentifier = @"JKFarmerEquipmentTaskCell";
+        JKFarmerEquipmentTaskCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (cell == nil) {
+            cell = [[[NSBundle mainBundle] loadNibNamed:@"JKFarmerEquipmentTaskCell" owner:nil options:nil] firstObject];
+            
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.backgroundColor = kBgColor;
         }
         cell.tag = indexPath.row;
         cell.backgroundColor = kBgColor;
@@ -957,8 +1020,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     JKDeviceModel *model = self.addDeviceArr[indexPath.row - 3];
-    JKEquipmentInfoVC *eiVC = [[JKEquipmentInfoVC alloc] init];
-    eiVC.tskID = model.deviceId;
-    [self.navigationController pushViewController:eiVC animated:YES];
+    if ([model.type isEqualToString:@"QY601"]) {
+        JKNewEquipmentInfoVC *eiVC = [[JKNewEquipmentInfoVC alloc] init];
+        eiVC.tskID = model.deviceId;
+        [self.navigationController pushViewController:eiVC animated:YES];
+    }else{
+        JKEquipmentInfoVC *eiVC = [[JKEquipmentInfoVC alloc] init];
+        eiVC.tskID = model.deviceId;
+        [self.navigationController pushViewController:eiVC animated:YES];
+    }
+
 }
 @end

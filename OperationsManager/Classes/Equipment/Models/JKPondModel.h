@@ -51,4 +51,12 @@
 @property (nonatomic, strong) NSString *aeratorControlOne;
 @property (nonatomic, strong) NSString *ident;
 
+@property (nonatomic, strong) NSString *aeratorControlTree;
+@property (nonatomic, strong) NSString *aeratorControlFour;
+@property (nonatomic, strong) NSString *statusControlOne;
+@property (nonatomic, strong) NSString *statusControlTwo;
+@property (nonatomic, strong) NSString *statusControlTree;
+@property (nonatomic, strong) NSString *statusControlFour;
+
+
 @end

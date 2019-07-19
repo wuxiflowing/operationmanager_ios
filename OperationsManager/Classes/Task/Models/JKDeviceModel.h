@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "JKDeviceControlInfo.h"
+#import "JKContactModel.h"
 @interface JKDeviceModel : NSObject <NSCoding>
 @property (nonatomic , assign) NSInteger no;
 @property (nonatomic , strong) NSString *pondId;
@@ -64,5 +65,18 @@
 @property (nonatomic, strong) NSString *statusControlTree;
 @property (nonatomic, strong) NSString *statusControlFour;
 
+@property (nonatomic, assign) NSInteger connectionType;
+@property (nonatomic, assign) CGFloat alertline1;
+@property (nonatomic, assign) CGFloat alertline2;
+@property (nonatomic, assign) CGFloat oxy;
+@property (nonatomic, assign) CGFloat temp;
+@property (nonatomic, strong) NSArray *deviceControlInfoBeanList;
+
+@property (nonatomic, strong) JKDeviceControlInfo *controlInfo1;
+@property (nonatomic, strong) JKDeviceControlInfo *controlInfo2;
+@property (nonatomic, strong) JKDeviceControlInfo *controlInfo3;
+@property (nonatomic, strong) JKDeviceControlInfo *controlInfo4;
+
+@property (nonatomic, strong)JKContactsModel *contactsModel;
 
 @end

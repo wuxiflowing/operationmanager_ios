@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "JKContactModel.h"
 @protocol JKDeviceConfigurationCellDelegate <NSObject>
 - (void)choosePond;
 - (void)onlineCheckWithTskID:(NSString *)tskID;
@@ -36,6 +36,8 @@
 @property (nonatomic, strong) NSString *secondNightContact;
 
 @property (nonatomic,assign)JKEquipmentType equipmentType;
+@property (nonatomic, strong) JKContactsModel *contactsModel;
+
 - (void)createUI;
 
 @end

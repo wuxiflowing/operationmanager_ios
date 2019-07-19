@@ -17,6 +17,7 @@
 #import "JKGeoCodeSearchVC.h"
 #import "ZQAlterField.h"
 #import "JKShowContactView.h"
+
 @interface JKReplaceEquipmentVC () <UITableViewDelegate, UITableViewDataSource, JKDeviceConfigurationCellDelegate,JKChoosePondViewDelegate, JKScanVCDelegate, JKSensorConfigurationCellDelegate, CLLocationManagerDelegate, JKGeoCodeSearchVCDelegate>
 {
     BOOL _isControllerOne;
@@ -37,6 +38,8 @@
 @property (nonatomic, strong) NSString *pondid;
 @property (nonatomic, strong) NSString *addrStr;
 @property (nonatomic, assign) BOOL isAutomatic;
+@property (nonatomic, strong) NSMutableArray *contactList;
+@property (nonatomic, strong) JKContactsModel *contactsModel;
 @end
 
 @implementation JKReplaceEquipmentVC
@@ -67,6 +70,21 @@
     return _dataSource;
 }
 
+- (NSMutableArray *)contactList{
+    if (!_contactList) {
+        _contactList = [[NSMutableArray alloc] init];
+    }
+    return _contactList;
+}
+
+- (JKContactsModel *)contactsModel{
+    if (!_contactsModel) {
+        _contactsModel = [JKContactsModel new];
+    }
+    return _contactsModel;
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -95,8 +113,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self getAllContactList];
     if (self.deviceID != nil) {
         if (self.isFromRepairVC) {
+            [self getDeviceContactList];
             [self getDeviceInfo:self.deviceID];
         } else {
             [self checkDeviceTskID:self.deviceID];
@@ -237,18 +257,59 @@
     ZQAlterField *alertView = [ZQAlterField alertView];
     [alertView ensureClickBlock:^(NSString *nameString, NSString *phoneString) {
         NSLog(@"%@-%@",nameString,phoneString);
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [params setObject:nameString forKey:@"name"];
+        [params setObject:phoneString forKey:@"phoneNumber"];
+        NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/linkMan/%@/save",kUrl_Base,self.customerId];
+        
+        [YJProgressHUD showProgressCircleNoValue:nil inView:self.view];
+        [[JKHttpTool shareInstance] PutReceiveInfo:params url:urlStr successBlock:^(id responseObject) {
+            [YJProgressHUD hide];
+            if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
+                JKContactModel *contactModel = [JKContactModel new];
+                contactModel.linkManID = responseObject[@"data"][@"linkManID"];
+                contactModel.name = responseObject[@"data"][@"name"];
+                contactModel.phoneNumber = responseObject[@"data"][@"phoneNumber"];
+                [self.contactList addObject:contactModel];
+            }
+        } withFailureBlock:^(NSError *error) {
+            [YJProgressHUD hide];
+        }];
     }];
     [alertView show];
 }
 #pragma mark -- 选择联系人tag:1~4
 - (void)chooseContact:(NSInteger)tag{
     JKShowContactView *showContactView = [JKShowContactView showContactView];
-    showContactView.list = @[@"dd1",@"dd2",@"dd3",@"dd4"];
-    [showContactView ensureCotactClickBlock:^(NSString * _Nonnull contact) {
+    showContactView.list = self.contactList;
+    [showContactView ensureCotactClickBlock:^(JKContactModel * _Nonnull contact) {
         NSLog(@"%@",contact);
-        [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"reloadContactCell" object:nil userInfo:@{@"tag":@(tag),@"contact":contact}]];
+        switch (tag) {
+            case 1:
+                self.contactsModel.contacters = contact.name;
+                self.contactsModel.contactPhone = contact.phoneNumber;
+                break;
+            case 2:
+                self.contactsModel.nightContacters = contact.name;
+                self.contactsModel.nightContactPhone = contact.phoneNumber;
+                break;
+            case 3:
+                self.contactsModel.standbyContact = contact.name;
+                self.contactsModel.standbyContactPhone = contact.phoneNumber;
+                break;
+            case 4:
+                self.contactsModel.standbynightContact = contact.name;
+                self.contactsModel.standbynightContactPhone = contact.phoneNumber;
+                break;
+                
+            default:
+                break;
+        }
+        [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"reloadContactCell" object:nil userInfo:@{@"tag":@(tag),@"contact":[NSString stringWithFormat:@"%@-%@",contact.name,contact.phoneNumber]}]];
     }];
     [showContactView show];
+    
+    
 }
 
 - (void)showPondName:(NSString *)pondName withPondId:(NSString *)pondId {
@@ -284,7 +345,6 @@
 
 #pragma mark -- 开/关
 - (void)getDeviceControlState:(NSString *)state withTskID:(NSString *)tskID{
-    NSInteger stateInt = [state integerValue];
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     [params setObject:state forKey:@"powerControl"];
 
@@ -418,6 +478,57 @@
         [self.tableView reloadData];
     } withFailureBlock:^(NSError *error) {
         
+    }];
+}
+
+#pragma mark -- 获取所有联系人列表
+- (void)getAllContactList{
+    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/linkMan/farmerId/%@",kUrl_Base,self.customerId];
+    [YJProgressHUD showProgressCircleNoValue:nil inView:self.view];
+    [[JKHttpTool shareInstance] GetReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+        [YJProgressHUD hide];
+        if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
+            NSArray *contacts =  responseObject[@"data"];
+            [self.contactList removeAllObjects];
+            for (NSDictionary *dic in contacts) {
+                JKContactModel *contactModel = [JKContactModel new];
+                contactModel.linkManID = dic[@"linkManID"];
+                contactModel.name = dic[@"name"];
+                contactModel.phoneNumber = dic[@"phoneNumber"];
+                [self.contactList addObject:contactModel];
+            }
+        }
+    } withFailureBlock:^(NSError *error) {
+        [YJProgressHUD hide];
+    }];
+}
+
+#pragma mark -- 根据设备id获取绑定的设备联系人
+- (void)getDeviceContactList{
+    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/linkMan/deviceId/%@",kUrl_Base,self.deviceID];
+    [YJProgressHUD showProgressCircleNoValue:nil inView:self.view];
+    [[JKHttpTool shareInstance] GetReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+        [YJProgressHUD hide];
+        if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
+            NSArray *contacts =  responseObject[@"data"];
+            [self.contactList removeAllObjects];
+            for (NSDictionary *dic in contacts) {
+                JKContactsModel *contactsModel = [JKContactsModel new];
+                contactsModel.contacters = dic[@"contacters"];
+                contactsModel.contactPhone = dic[@"contactPhone"];
+                contactsModel.nightContacters = dic[@"nightContacters"];
+                contactsModel.nightContactPhone = dic[@"nightContactPhone"];
+                contactsModel.standbyContact = dic[@"standbyContact"];
+                contactsModel.standbyContactPhone = dic[@"standbyContactPhone"];
+                contactsModel.standbynightContact = dic[@"standbynightContact"];
+                contactsModel.standbynightContactPhone = dic[@"standbynightContactPhone"];
+                [self.contactList addObject:contactsModel];
+            }
+            self.contactsModel = (JKContactsModel *)[self.contactList firstObject];
+        }
+        [self.tableView reloadData];
+    } withFailureBlock:^(NSError *error) {
+        [YJProgressHUD hide];
     }];
 }
 
@@ -575,18 +686,19 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (self.isSet) {
                     JKDeviceModel *model = self.dataSource[0];
-                    if ([_delegate respondsToSelector:@selector(changeDevice:withPondName:withPondId:withNo:)]) {
-                        [_delegate changeDevice:model withPondName:self.dcgCell.pondName withPondId:self.dcgCell.pondId withNo:self.no];
+                    if ([_delegate respondsToSelector:@selector(changeDevice:withPondName:withPondId:withNo:contactsModel:)]) {
+                        [_delegate changeDevice:model withPondName:self.dcgCell.pondName withPondId:self.dcgCell.pondId withNo:self.no contactsModel:self.contactsModel];
                     }
                 } else {
                     JKDeviceModel *model = self.dataSource[0];
                     if (self.type == JKEquipmentInfoTypeRepaire) {
-                        if ([_delegate respondsToSelector:@selector(replaceDevice:withPondAddr:withLat:withLng:)]) {
-                            [_delegate replaceDevice:model withPondAddr:self.addrStr withLat:self.lat withLng:self.lng];
+                        if ([_delegate respondsToSelector:@selector(replaceDevice:withPondAddr:withLat:withLng:contactsModel:)]) {
+                            [_delegate replaceDevice:model withPondAddr:self.addrStr withLat:self.lat withLng:self.lng contactsModel:self.contactsModel];
                         }
                     } else {
-                        if ([_delegate respondsToSelector:@selector(addDevice:withPondName:withPondId:withPondAddr:withLat:withLng:)]) {
-                            [_delegate addDevice:model withPondName:self.dcgCell.pondName withPondId:self.pondid withPondAddr:self.addrStr withLat:self.lat withLng:self.lng];
+//
+                        if ([_delegate respondsToSelector:@selector(addDevice:withPondName:withPondId:withPondAddr:withLat:withLng:contactsModel:)]) {
+                            [_delegate addDevice:model withPondName:self.dcgCell.pondName withPondId:self.pondid withPondAddr:self.addrStr withLat:self.lat withLng:self.lng contactsModel:self.contactsModel];
                         }
                     }
                 }
@@ -655,6 +767,9 @@
         cell.isFromRepairVC = self.isFromRepairVC;
         cell.addrStr = self.addrStr;
         self.dcgCell = cell;
+        if (self.isFromRepairVC) {
+            cell.contactsModel = self.contactsModel;
+        }
         [cell createUI];
         return cell;
     } else if (indexPath.row == 1) {

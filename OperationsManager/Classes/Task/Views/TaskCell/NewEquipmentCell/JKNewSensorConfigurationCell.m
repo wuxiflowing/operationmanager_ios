@@ -18,6 +18,7 @@
 @property (nonatomic, strong) NSArray *placeholderArr;
 @property (nonatomic, strong) UIButton *lineBtn;
 @property (nonatomic, strong) UIButton *noLineBtn;
+@property (nonatomic, strong) UIButton *matchBtn;
 @property (nonatomic, strong) UITextField *alertlineOneTF;
 @property (nonatomic, strong) UITextField *alertlineTwoTF;
 
@@ -52,7 +53,7 @@
         
         self.titleArr = @[@"传感器配置",@"选择连接方式",@"警报线1",@"警报线2"];
         self.placeholderArr = @[@"", @"",@"请输入警报线1", @"请输入警报线2"];
-        self.isConnectLine = YES;
+        self.connectionType = 1;
         [self createUI];
     }
     return self;
@@ -67,7 +68,7 @@
     JKDeviceModel *model = _dataSource[0];
     self.alertlineOneStr = [NSString stringWithFormat:@"%.2f",model.alertlineOne];
     self.alertlineTwoStr = [NSString stringWithFormat:@"%.2f",model.alertlineTwo];
-    self.isConnectLine = [model.automatic boolValue];
+    self.connectionType = model.connectionType;
     [self.tableView reloadData];
 }
 
@@ -113,11 +114,19 @@
         }
         _chooseSingle = !_chooseSingle;
     }
-    self.isConnectLine = _chooseSingle;
+    self.connectionType = _chooseSingle?1:0;
     if (_dataSource.count != 0) {
         JKDeviceModel *model = _dataSource[0];
-        model.automatic = [NSString stringWithFormat:@"%d",!self.isConnectLine];
-        [_delegate changeAutomatic:!self.isConnectLine];
+        model.connectionType = self.connectionType;
+    }
+}
+
+- (void)btnMatchingClick:(UIButton *)btn{
+    if (_dataSource.count == 0) {
+        return;
+    }
+    if (self.matchingBlock) {
+        self.matchingBlock(self.connectionType);
     }
 }
 
@@ -147,30 +156,6 @@
     if (indexPath.row == 0) {
         cell.textLabel.font = JKFont(16);
     } else if (indexPath.row == 1) {
-        [self.noLineBtn  removeFromSuperview];
-        UIButton *noLineBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [noLineBtn setImage:[UIImage imageNamed:@"ic_choose_off"] forState:UIControlStateNormal];
-        [noLineBtn setImage:[UIImage imageNamed:@"ic_choose_on"] forState:UIControlStateSelected];
-        [noLineBtn setTitle:@"  无线" forState:UIControlStateNormal];
-        [noLineBtn setTitleColor:RGBHex(0x999999) forState:UIControlStateNormal];
-        [noLineBtn setTitleColor:RGBHex(0x333333) forState:UIControlStateSelected];
-        noLineBtn.titleLabel.font = JKFont(14);
-        noLineBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-        noLineBtn.tag = 1;
-        if (self.isConnectLine) {
-            noLineBtn.selected = NO;
-        } else {
-            noLineBtn.selected = YES;
-        }
-        [noLineBtn addTarget:self action:@selector(singleSelected:) forControlEvents:UIControlEventTouchUpInside];
-        [cell addSubview:noLineBtn];
-        [noLineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(cell.mas_centerY);
-            make.right.equalTo(cell.mas_right).offset(-15);
-            make.size.mas_equalTo(CGSizeMake(60, 30));
-        }];
-        self.noLineBtn = noLineBtn;
-        
         [self.lineBtn removeFromSuperview];
         UIButton *lineBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [lineBtn setImage:[UIImage imageNamed:@"ic_choose_off"] forState:UIControlStateNormal];
@@ -181,7 +166,7 @@
         lineBtn.titleLabel.font = JKFont(14);
         lineBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         lineBtn.tag = 0;
-        if (self.isConnectLine) {
+        if (self.connectionType) {
             lineBtn.selected = YES;
         } else {
             lineBtn.selected = NO;
@@ -190,10 +175,54 @@
         [cell addSubview:lineBtn];
         [lineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(cell.mas_centerY);
-            make.right.equalTo(noLineBtn.mas_left).offset(-5);
+            make.left.equalTo(cell.textLabel.mas_right).offset(5);
             make.size.mas_equalTo(CGSizeMake(60, 30));
         }];
         self.lineBtn = lineBtn;
+        
+        [self.noLineBtn  removeFromSuperview];
+        UIButton *noLineBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [noLineBtn setImage:[UIImage imageNamed:@"ic_choose_off"] forState:UIControlStateNormal];
+        [noLineBtn setImage:[UIImage imageNamed:@"ic_choose_on"] forState:UIControlStateSelected];
+        [noLineBtn setTitle:@"  无线" forState:UIControlStateNormal];
+        [noLineBtn setTitleColor:RGBHex(0x999999) forState:UIControlStateNormal];
+        [noLineBtn setTitleColor:RGBHex(0x333333) forState:UIControlStateSelected];
+        noLineBtn.titleLabel.font = JKFont(14);
+        noLineBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        noLineBtn.tag = 1;
+        if (self.connectionType) {
+            noLineBtn.selected = NO;
+        } else {
+            noLineBtn.selected = YES;
+        }
+        [noLineBtn addTarget:self action:@selector(singleSelected:) forControlEvents:UIControlEventTouchUpInside];
+        [cell addSubview:noLineBtn];
+        [noLineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(cell.mas_centerY);
+            make.left.equalTo(lineBtn.mas_right).offset(5);
+            make.size.mas_equalTo(CGSizeMake(60, 30));
+        }];
+        self.noLineBtn = noLineBtn;
+        
+        [self.matchBtn  removeFromSuperview];
+        UIButton *matchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [matchBtn setTitle:@"配对" forState:UIControlStateNormal];
+        [matchBtn setTitleColor:kWhiteColor forState:UIControlStateNormal];
+        matchBtn.titleLabel.font = JKFont(14);
+        matchBtn.layer.cornerRadius = 4;
+        matchBtn.layer.masksToBounds = YES;
+        [matchBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_s"] forState:UIControlStateNormal];
+        [matchBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateHighlighted];
+        [matchBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateSelected];
+        [matchBtn addTarget:self action:@selector(btnMatchingClick:) forControlEvents:UIControlEventTouchUpInside];
+        [cell addSubview:matchBtn];
+        [matchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(cell.mas_centerY);
+            make.left.equalTo(noLineBtn.mas_right).offset(15);
+            make.size.mas_equalTo(CGSizeMake(60, 30));
+        }];
+        self.matchBtn = matchBtn;
+
     } else {
         cell.detailTextLabel.text = @"mg/L";
         

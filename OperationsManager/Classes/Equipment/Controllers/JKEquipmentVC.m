@@ -7,11 +7,11 @@
 //
 
 #import "JKEquipmentVC.h"
-#import "JKEquipmentCell.h"
 #import "JKEquipmentInfoVC.h"
+#import "JKNewEquipmentInfoVC.h"
 #import "JKPondModel.h"
-
-@interface JKEquipmentVC () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, JKEquipmentCellDelegate>
+#import "JKFarmerEquipmentMainCell.h"
+@interface JKEquipmentVC () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, JKFarmerEquipmentMainCellDelegate>
 {
     NSInteger _page;
 }
@@ -19,8 +19,6 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *rowNumberArr;
 @property (nonatomic, strong) NSMutableArray *sectionTitileArr;
-@property (nonatomic, strong) NSMutableArray *activelyArr;
-@property (nonatomic, strong) NSMutableArray *boolArr;
 @end
 
 @implementation JKEquipmentVC
@@ -39,19 +37,7 @@
     return _sectionTitileArr;
 }
 
-- (NSMutableArray *)activelyArr {
-    if (!_activelyArr) {
-        _activelyArr = [[NSMutableArray alloc] init];
-    }
-    return _activelyArr;
-}
 
-- (NSMutableArray *)boolArr {
-    if (!_boolArr) {
-        _boolArr = [[NSMutableArray alloc] init];
-    }
-    return _boolArr;
-}
 
 - (UISearchBar *)searchBar {
     if (!_searchBar) {
@@ -106,7 +92,7 @@
         [self.tableView.mj_footer resetNoMoreData];
         [self getFishRawData:0];
         [self.tableView.mj_header endRefreshing];
-        _page = 0;
+        self->_page = 0;
     }];
     header.automaticallyChangeAlpha = YES;
     header.lastUpdatedTimeLabel.hidden = YES;
@@ -117,8 +103,8 @@
 #pragma mark -- 上拉刷新
 - (void)dropUpRefresh {
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
-        _page++;
-        [self getFishRawData:_page];
+        self->_page += 1;
+        [self getFishRawData:self->_page];
         [self.tableView.mj_footer endRefreshing];
     }];
 }
@@ -126,7 +112,7 @@
 #pragma mark -- 设备状态列表
 - (void)getFishRawData:(NSInteger)page {
     NSString *loginId = [JKUserDefaults objectForKey:@"loginid"];
-    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/mytask/%@/maintainKeeperID/pondData/devDetail/true?page=%ld",kUrl_Base, loginId,page];
+    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/mytask/%@/maintainKeeperID/pondData/newDevDetail?page=%ld",kUrl_Base, loginId,page];
 
     [YJProgressHUD showProgressCircleNoValue:@"加载中..." inView:self.view];
     [[JKHttpTool shareInstance] GetReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
@@ -136,8 +122,6 @@
             if (page == 0) {
                 [self.sectionTitileArr removeAllObjects];
                 [self.rowNumberArr removeAllObjects];
-                [self.boolArr removeAllObjects];
-                [self.activelyArr removeAllObjects];
             }
 
             if ([responseObject[@"total"] integerValue] == 0) {
@@ -146,49 +130,58 @@
 
             for (NSDictionary *dict in responseObject[@"data"]) {
                 JKPondModel *pModel = [[JKPondModel alloc] init];
-                pModel.farmerId = dict[@"farmerId"];
-                pModel.area = dict[@"area"];
-                pModel.fishVariety = dict[@"fishVariety"];
-                pModel.fryNumber = dict[@"fryNumber"];
-                pModel.name = dict[@"name"];
-                pModel.phoneNumber = dict[@"phoneNumber"];
-                pModel.pondAddress = dict[@"pondAddress"];
-                pModel.pondId = dict[@"pondId"];
-                pModel.putInDate = dict[@"putInDate"];
-                pModel.reckonSaleDate = dict[@"reckonSaleDate"];
-                pModel.region = dict[@"region"];
-                pModel.childDeviceList = dict[@"childDeviceList"];
-                [self.sectionTitileArr addObject:pModel];
-
-                NSMutableArray *arr = [[NSMutableArray alloc] init];
-                NSMutableArray *activelyArr = [[NSMutableArray alloc] init];
-                for (NSDictionary *dic in dict[@"childDeviceList"]) {
-                    JKPondChildDeviceModel *pcdModel = [[JKPondChildDeviceModel alloc] init];
-                    pcdModel.alarmType = dic[@"alarmType"];
-                    pcdModel.alertlineTwo = dic[@"alertlineTwo"];
-                    pcdModel.automatic = dic[@"automatic"];
-                    pcdModel.dissolvedOxygen = dic[@"dissolvedOxygen"];
-                    pcdModel.enabled = dic[@"enabled"];
-                    pcdModel.deviceIdentifier = dic[@"identifier"];
-                    pcdModel.ident = dic[@"identifier"];
-                    pcdModel.name = dic[@"name"];
-                    pcdModel.oxyLimitDownOne = dic[@"oxyLimitDownOne"];
-                    pcdModel.oxyLimitUp = dic[@"oxyLimitUp"];
-                    pcdModel.ph = dic[@"ph"];
-                    pcdModel.scheduled = dic[@"scheduled"];
-                    pcdModel.temperature = dic[@"temperature"];
-                    pcdModel.type = dic[@"type"];
-                    pcdModel.workStatus = dic[@"workStatus"];
-                    NSArray *aeratorControls = dic[@"aeratorControlList"];
-                    if (aeratorControls != nil && ![aeratorControls isKindOfClass:[NSNull class]] && aeratorControls.count != 0) {
-                        pcdModel.aeratorControlOne = aeratorControls[0][@"open"];
-                        pcdModel.aeratorControlTwo = aeratorControls[1][@"open"];
-                    }
-                    [arr addObject:pcdModel];
+                pModel.area = dict[@"area"];//
+                pModel.fishVariety = dict[@"fishVariety"];//
+                pModel.name = dict[@"name"];//
+                pModel.pondAddress = dict[@"pondAddress"];//
+                pModel.pondId = dict[@"pondId"];//
+                pModel.putInDate = dict[@"putInDate"];//
+                if ([[NSString stringWithFormat:@"%@",dict[@"reckonSaleDate"]] isEqualToString:@"<null>"]) {
+                    pModel.reckonSaleDate = @"";
+                } else {
+                    pModel.reckonSaleDate = dict[@"reckonSaleDate"];//
                 }
-                [self.activelyArr addObject:activelyArr];
-                [self.rowNumberArr addObject:arr];
-                [self.boolArr addObject:@NO];
+                pModel.region = dict[@"region"];//
+                pModel.childDeviceList = dict[@"childDeviceList"];
+                
+                
+                
+                if ([dict[@"childDeviceList"] count] != 0) {
+                    [self.sectionTitileArr addObject:pModel];
+                    NSMutableArray *arr = [[NSMutableArray alloc] init];
+                    for (NSDictionary *dic in dict[@"childDeviceList"]) {
+                        JKPondChildDeviceModel *pcdModel = [[JKPondChildDeviceModel alloc] init];
+                        pcdModel.alarmType = dic[@"alarmType"];
+                        pcdModel.alertlineTwo = dic[@"alertlineTwo"];
+                        pcdModel.automatic = dic[@"automatic"];
+                        pcdModel.dissolvedOxygen = dic[@"oxy"];
+                        pcdModel.enabled = dic[@"enabled"];
+                        pcdModel.deviceId = dic[@"id"];
+                        pcdModel.ident = dic[@"identifier"];
+                        pcdModel.name = dic[@"name"];
+                        pcdModel.oxyLimitDownOne = dic[@"oxyLimitDownOne"];
+                        pcdModel.oxyLimitUp = dic[@"oxyLimitUp"];
+                        pcdModel.ph = dic[@"ph"];
+                        pcdModel.scheduled = dic[@"scheduled"];
+                        pcdModel.temperature = dic[@"temp"];
+                        pcdModel.type = dic[@"type"];
+                        pcdModel.workStatus = dic[@"workStatus"];
+                        NSArray *aeratorControls = dic[@"deviceControlInfoBeanList"];
+                        if (aeratorControls != nil && ![aeratorControls isKindOfClass:[NSNull class]] && aeratorControls.count != 0) {
+                            pcdModel.aeratorControlOne = aeratorControls[0][@"open"];
+                            pcdModel.aeratorControlTwo = aeratorControls[1][@"open"];
+                            pcdModel.aeratorControlTree = aeratorControls[2][@"open"];
+                            pcdModel.aeratorControlFour = aeratorControls[3][@"open"];
+                            pcdModel.statusControlOne = aeratorControls[0][@"auto"];
+                            pcdModel.statusControlTwo = aeratorControls[1][@"auto"];
+                            pcdModel.statusControlTree = aeratorControls[2][@"auto"];
+                            pcdModel.statusControlFour = aeratorControls[3][@"auto"];
+                        }
+                        [arr addObject:pcdModel];
+                    }
+                    [self.rowNumberArr addObject:arr];
+                }
+                
             }
         }
         [self.tableView reloadData];
@@ -200,7 +193,7 @@
 #pragma mark -- 搜索设备
 - (void)searchDevtailInfo:(NSInteger)page {
     NSString *loginId = [JKUserDefaults objectForKey:@"loginid"];
-    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/mytask/%@/maintainKeeperID/pondData/devDetail/true/%@?page=%ld",kUrl_Base, loginId, self.searchBar.text,page];
+    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/mytask/%@/maintainKeeperID/pondData/newDevDetail/%@?page=%ld",kUrl_Base, loginId, self.searchBar.text,page];
     
     [YJProgressHUD showProgressCircleNoValue:@"加载中..." inView:self.view];
     [[JKHttpTool shareInstance] GetReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
@@ -209,8 +202,6 @@
             if (page == 0) {
                 [self.sectionTitileArr removeAllObjects];
                 [self.rowNumberArr removeAllObjects];
-                [self.boolArr removeAllObjects];
-                [self.activelyArr removeAllObjects];
             }
             
             if ([responseObject[@"total"] integerValue] == 0) {
@@ -219,49 +210,57 @@
             
             for (NSDictionary *dict in responseObject[@"data"]) {
                 JKPondModel *pModel = [[JKPondModel alloc] init];
-                pModel.farmerId = dict[@"farmerId"];
-                pModel.area = dict[@"area"];
-                pModel.fishVariety = dict[@"fishVariety"];
-                pModel.fryNumber = dict[@"fryNumber"];
-                pModel.name = dict[@"name"];
-                pModel.phoneNumber = dict[@"phoneNumber"];
-                pModel.pondAddress = dict[@"pondAddress"];
-                pModel.pondId = dict[@"pondId"];
-                pModel.putInDate = dict[@"putInDate"];
-                pModel.reckonSaleDate = dict[@"reckonSaleDate"];
-                pModel.region = dict[@"region"];
-                pModel.childDeviceList = dict[@"childDeviceList"];
-                [self.sectionTitileArr addObject:pModel];
-                
-                NSMutableArray *arr = [[NSMutableArray alloc] init];
-                NSMutableArray *activelyArr = [[NSMutableArray alloc] init];
-                for (NSDictionary *dic in dict[@"childDeviceList"]) {
-                    JKPondChildDeviceModel *pcdModel = [[JKPondChildDeviceModel alloc] init];
-                    pcdModel.alarmType = dic[@"alarmType"];
-                    pcdModel.alertlineTwo = dic[@"alertlineTwo"];
-                    pcdModel.automatic = dic[@"automatic"];
-                    pcdModel.dissolvedOxygen = dic[@"dissolvedOxygen"];
-                    pcdModel.enabled = dic[@"enabled"];
-                    pcdModel.deviceIdentifier = dic[@"identifier"];
-                    pcdModel.ident = dic[@"identifier"];
-                    pcdModel.name = dic[@"name"];
-                    pcdModel.oxyLimitDownOne = dic[@"oxyLimitDownOne"];
-                    pcdModel.oxyLimitUp = dic[@"oxyLimitUp"];
-                    pcdModel.ph = dic[@"ph"];
-                    pcdModel.scheduled = dic[@"scheduled"];
-                    pcdModel.temperature = dic[@"temperature"];
-                    pcdModel.type = dic[@"type"];
-                    pcdModel.workStatus = dic[@"workStatus"];
-                    NSArray *aeratorControls = dic[@"aeratorControlList"];
-                    if (aeratorControls != nil && ![aeratorControls isKindOfClass:[NSNull class]] && aeratorControls.count != 0) {
-                        pcdModel.aeratorControlOne = aeratorControls[0][@"open"];
-                        pcdModel.aeratorControlTwo = aeratorControls[1][@"open"];
-                    }
-                    [arr addObject:pcdModel];
+                pModel.area = dict[@"area"];//
+                pModel.fishVariety = dict[@"fishVariety"];//
+                pModel.name = dict[@"name"];//
+                pModel.pondAddress = dict[@"pondAddress"];//
+                pModel.pondId = dict[@"pondId"];//
+                pModel.putInDate = dict[@"putInDate"];//
+                if ([[NSString stringWithFormat:@"%@",dict[@"reckonSaleDate"]] isEqualToString:@"<null>"]) {
+                    pModel.reckonSaleDate = @"";
+                } else {
+                    pModel.reckonSaleDate = dict[@"reckonSaleDate"];//
                 }
-                [self.activelyArr addObject:activelyArr];
-                [self.rowNumberArr addObject:arr];
-                [self.boolArr addObject:@NO];
+                pModel.region = dict[@"region"];//
+                pModel.childDeviceList = dict[@"childDeviceList"];
+                
+                
+                if ([dict[@"childDeviceList"] count] != 0) {
+                    [self.sectionTitileArr addObject:pModel];
+                    NSMutableArray *arr = [[NSMutableArray alloc] init];
+                    for (NSDictionary *dic in dict[@"childDeviceList"]) {
+                        JKPondChildDeviceModel *pcdModel = [[JKPondChildDeviceModel alloc] init];
+                        pcdModel.alarmType = dic[@"alarmType"];
+                        pcdModel.alertlineTwo = dic[@"alertlineTwo"];
+                        pcdModel.automatic = dic[@"automatic"];
+                        pcdModel.dissolvedOxygen = dic[@"oxy"];
+                        pcdModel.enabled = dic[@"enabled"];
+                        pcdModel.deviceId = dic[@"id"];
+                        pcdModel.ident = dic[@"identifier"];
+                        pcdModel.name = dic[@"name"];
+                        pcdModel.oxyLimitDownOne = dic[@"oxyLimitDownOne"];
+                        pcdModel.oxyLimitUp = dic[@"oxyLimitUp"];
+                        pcdModel.ph = dic[@"ph"];
+                        pcdModel.scheduled = dic[@"scheduled"];
+                        pcdModel.temperature = dic[@"temp"];
+                        pcdModel.type = dic[@"type"];
+                        pcdModel.workStatus = dic[@"workStatus"];
+                        NSArray *aeratorControls = dic[@"deviceControlInfoBeanList"];
+                        if (aeratorControls != nil && ![aeratorControls isKindOfClass:[NSNull class]] && aeratorControls.count != 0) {
+                            pcdModel.aeratorControlOne = aeratorControls[0][@"open"];
+                            pcdModel.aeratorControlTwo = aeratorControls[1][@"open"];
+                            pcdModel.aeratorControlTree = aeratorControls[2][@"open"];
+                            pcdModel.aeratorControlFour = aeratorControls[3][@"open"];
+                            pcdModel.statusControlOne = aeratorControls[0][@"auto"];
+                            pcdModel.statusControlTwo = aeratorControls[1][@"auto"];
+                            pcdModel.statusControlTree = aeratorControls[2][@"auto"];
+                            pcdModel.statusControlFour = aeratorControls[3][@"auto"];
+                        }
+                        [arr addObject:pcdModel];
+                    }
+                    [self.rowNumberArr addObject:arr];
+                }
+                
             }
         }
         [self.tableView reloadData];
@@ -318,95 +317,60 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if ([self.boolArr[section] boolValue] == NO) {
-        return 0;
-    }else {
-        return [self.rowNumberArr[section] count];
-    }
+    return [self.rowNumberArr[section] count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == ([self.rowNumberArr[indexPath.section] count] - 1) ) {
-        return 266;
+        return 195;
     } else {
-        return 256;
+        return 185;
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 51;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    //创建headerView
-    UIView *headerView = [[UIView alloc] init];
-    headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 51);
-    headerView.tag = 10 + section;
-    headerView.backgroundColor = kWhiteColor;
-    
-    //分割线
-    UILabel *horizontalLineLb = [[UILabel alloc] init];
-    horizontalLineLb.backgroundColor = kBgColor;
-    [headerView addSubview:horizontalLineLb];
-    [horizontalLineLb mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(headerView.mas_top);
-        make.left.right.equalTo(headerView);
-        make.height.mas_equalTo(1);
-    }];
-    
-    // 默认组是没有删除组的
-    JKPondModel *model = self.sectionTitileArr[section];
-    //标题
-    UILabel *titleLb = [[UILabel alloc] init];
-    titleLb.text = model.name;
-    titleLb.numberOfLines = 1;
-    [headerView addSubview:titleLb];
-    CGSize size = CGSizeMake(50,50); //设置一个行高上限
-    NSDictionary *attribute = @{NSFontAttributeName: titleLb.font};
-    CGSize labelsize = [titleLb.text boundingRectWithSize:size options:NSStringDrawingUsesDeviceMetrics attributes:attribute context:nil].size;
-    [titleLb mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(headerView.mas_top);
-        make.left.equalTo(headerView.mas_left).offset(15);
-        if (labelsize.width > SCREEN_WIDTH / 2) {
-            make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH - 50, 50));
-        } else {
-            make.size.mas_equalTo(CGSizeMake(labelsize.width + 3, 50));
-        }
-    }];
-    
-    //箭头
-    UIImageView *arrowImgV = [[UIImageView alloc] init];
-    arrowImgV.image = [self.boolArr[section] boolValue] ? [UIImage imageNamed:@"ic_arrow_up"] : [UIImage imageNamed:@"ic_arrow_down"];
-    [headerView addSubview:arrowImgV];
-    [arrowImgV mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(headerView.mas_centerY);
-        make.right.equalTo(headerView.mas_right).offset(-15);
-        make.size.mas_equalTo(CGSizeMake(20, 10));
-    }];
-    
-    //添加轻扣手势
-    UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizer:)];
-    [headerView addGestureRecognizer:tap];
-    
-    return headerView;
+    return 0.1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *cellIdentifier =@"JKEquipmentCell";
-    JKEquipmentCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    
+    NSString *cellIdentifier = @"JKFarmerEquipmentMainCell";
+    JKFarmerEquipmentMainCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
-        cell = [[JKEquipmentCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"JKFarmerEquipmentMainCell" owner:nil options:nil] firstObject];
+        
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.backgroundColor = kBgColor;
+    } else {
+        while ([cell.contentView.subviews lastObject] != nil) {
+            [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
+        }
     }
     
     if (self.rowNumberArr.count != 0) {
-        if (indexPath.row < [self.rowNumberArr[indexPath.section] count]) {
+        if (indexPath.row <= [self.rowNumberArr[indexPath.section] count]) {
+            JKPondModel *pModel = self.sectionTitileArr[indexPath.section];
             JKPondChildDeviceModel *model = self.rowNumberArr[indexPath.section][indexPath.row];
-            [cell configCellWithModel:model];
+            [cell configCellWithModel:model withPondModel:pModel];
         }
     }
     cell.delegate = self;
     return cell;
+}
+
+#pragma mark -- 设备详情
+- (void)pushDeviceInfoVC:(JKPondChildDeviceModel *)dModel {
+    if ([dModel.type isEqualToString:@"KD326"]) {
+        JKEquipmentInfoVC *eiVC = [[JKEquipmentInfoVC alloc] init];
+        eiVC.tskID = dModel.ident;
+        [self.navigationController pushViewController:eiVC animated:YES];
+    }
+    
+    if ([dModel.type isEqualToString:@"QY601"]) {
+        JKNewEquipmentInfoVC *eiVC = [[JKNewEquipmentInfoVC alloc] init];
+        eiVC.tskID = dModel.ident;
+        [self.navigationController pushViewController:eiVC animated:YES];
+    }
 }
 
 #pragma mark -- cell的分割线顶头
@@ -416,19 +380,6 @@
     cell.preservesSuperviewLayoutMargins = NO;
 }
 
-#pragma mark -- UITapGestureRecognizer点击事件
-- (void)tapGestureRecognizer:(UITapGestureRecognizer *)tap {
-    //获取section
-    NSInteger section = tap.view.tag - 10;
-    //判断改变bool值
-    if ([self.boolArr[section] boolValue] == YES) {
-        [self.boolArr replaceObjectAtIndex:(section) withObject:@NO];
-    }else {
-        [self.boolArr replaceObjectAtIndex:(section) withObject:@YES];
-    }
-    //刷新某个section
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationFade];
-}
 
 
 @end

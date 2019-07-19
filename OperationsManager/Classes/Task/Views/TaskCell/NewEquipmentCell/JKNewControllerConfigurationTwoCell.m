@@ -72,10 +72,10 @@
         return;
     }
     JKDeviceModel *model = dataSource[0];
-    self.oxygenUpB = model.voltageUpB;
-    self.oxygenDownB = model.voltageDownB;
-    self.electricCurrentUpB = model.electricCurrentUpB;
-    self.electricCurrentDownB = model.electricCurrentDownB;
+    self.oxygenUpB = [NSString stringWithFormat:@"%.1f",model.controlInfo2.oxyLimitUp];
+    self.oxygenDownB =[NSString stringWithFormat:@"%.1f",model.controlInfo2.oxyLimitDown];
+    self.electricCurrentUpB = [NSString stringWithFormat:@"%.1f",model.controlInfo2.electricityUp];
+    self.electricCurrentDownB = [NSString stringWithFormat:@"%.1f",model.controlInfo2.electricityDown];
     [self.tableView reloadData];
 }
 
@@ -153,7 +153,7 @@
     cell.detailTextLabel.textColor = RGBHex(0xcccccc);
     
     if (indexPath.row == 0) {
-        cell.textLabel.text = @"控制器1配置";
+        cell.textLabel.text = @"控制器2配置";
         cell.textLabel.font = JKFont(16);
         
     } else if (indexPath.row == 1 || indexPath.row == 2 || indexPath.row == 3 ||
@@ -184,7 +184,7 @@
         [textField mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(cell);
             make.bottom.equalTo(cell);
-            make.right.equalTo(cell.detailTextLabel.mas_left).offset(-5);
+            make.right.equalTo(cell).offset(-50);
             make.width.mas_offset(100);
         }];
         
