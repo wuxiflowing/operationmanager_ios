@@ -979,7 +979,7 @@
         }];
         
         UIButton *addQYBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [addQYBtn setTitle:@"+ 添加QYT设备" forState:UIControlStateNormal];
+        [addQYBtn setTitle:@"+ 添加QY601设备" forState:UIControlStateNormal];
         [addQYBtn setTitleColor:kWhiteColor forState:UIControlStateNormal];
         [addQYBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_s"] forState:UIControlStateNormal];
         [addQYBtn setBackgroundImage:[UIImage imageNamed:@"bg_login_n"] forState:UIControlStateHighlighted];

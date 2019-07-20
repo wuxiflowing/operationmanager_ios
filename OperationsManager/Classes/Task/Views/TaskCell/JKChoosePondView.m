@@ -389,10 +389,10 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0 || indexPath.row == 1 || indexPath.row == (self.sectionTitileArr.count + 3) - 1){
-        return;
-    }
-    JKPondModel *model = self.sectionTitileArr[indexPath.row - 2];
+//    if (indexPath.row == 0 || indexPath.row == 1 || indexPath.row == (self.sectionTitileArr.count + 3) - 1){
+//        return;
+//    }
+    JKPondModel *model = self.sectionTitileArr[indexPath.row];
     if ([_delegate respondsToSelector:@selector(showPondName:withPondId:)]) {
         [_delegate showPondName:model.name withPondId:model.pondId];
     }

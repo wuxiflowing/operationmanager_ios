@@ -69,6 +69,7 @@
 }
 
 - (void)configCellWithModel:(JKDeviceModel *)model{
+    self.model = model;
     self.pondNameLb.text = model.name;
     self.typeLb.text = JKSafeNull(model.type);
     self.deviceName = model.name;
