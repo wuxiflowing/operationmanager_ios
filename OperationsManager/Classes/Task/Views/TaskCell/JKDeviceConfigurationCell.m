@@ -50,8 +50,21 @@
 
 - (void)setAddrStr:(NSString *)addrStr {
     _addrStr = addrStr;
-    NSIndexPath *indexPath=[NSIndexPath indexPathForRow:3 inSection:0];
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
+    if (_addrStr) {
+        NSIndexPath *indexPath=[NSIndexPath indexPathForRow:3 inSection:0];
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
+    }
+
+}
+
+-(void)setContactsModel:(JKContactsModel *)contactsModel{
+    _contactsModel = contactsModel;
+    
+    NSIndexPath *indexPath1=[NSIndexPath indexPathForRow:4 inSection:0];
+    NSIndexPath *indexPath2=[NSIndexPath indexPathForRow:5 inSection:0];
+    NSIndexPath *indexPath3=[NSIndexPath indexPathForRow:6 inSection:0];
+    NSIndexPath *indexPath4=[NSIndexPath indexPathForRow:7 inSection:0];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath1,indexPath2,indexPath3,indexPath4,nil] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 

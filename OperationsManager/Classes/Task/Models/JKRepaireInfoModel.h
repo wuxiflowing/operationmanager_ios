@@ -40,6 +40,6 @@
 @property (nonatomic, strong) NSString *txtMonMembName;
 @property (nonatomic, strong) NSString *latitude;
 @property (nonatomic, strong) NSString *longitude;
-
+@property (nonatomic, strong) NSString *cboPondID;
 
 @end

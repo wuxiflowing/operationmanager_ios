@@ -144,6 +144,7 @@
             model.txtHKName = responseObject[@"data"][@"txtHKName"];
             model.latitude = responseObject[@"data"][@"latitude"];
             model.longitude = responseObject[@"data"][@"longitude"];
+            model.cboPondID = responseObject[@"data"][@"cboPondID"];
             self.oDeviceID = model.txtRepairEqpID;
             [self.dataSource addObject:model];
         }
@@ -426,6 +427,7 @@
         reVC.delegate = self;
         reVC.isFromRepairVC = YES;
         reVC.customerId = model.txtFarmerID;
+        reVC.pondId = model.cboPondID;
         [self.navigationController pushViewController:reVC animated:YES];
     }else{
         JKRepaireInfoModel *model = [self.dataSource lastObject];
@@ -435,6 +437,7 @@
         reVC.delegate = self;
         reVC.isFromRepairVC = YES;
         reVC.customerId = model.txtFarmerID;
+        reVC.pondId = model.cboPondID;
         [self.navigationController pushViewController:reVC animated:YES];
     }
 

@@ -116,11 +116,13 @@
     [self getAllContactList];
     if (self.deviceID != nil) {
         if (self.isFromRepairVC) {
-            [self getDeviceContactList];
             [self getDeviceInfo:self.deviceID];
         } else {
             [self checkDeviceTskID:self.deviceID];
         }
+    }
+    if (self.type == JKEquipmentInfoTypeRepaire) {
+        [self getDeviceContactList];
     }
 }
 
@@ -257,6 +259,9 @@
     ZQAlterField *alertView = [ZQAlterField alertView];
     [alertView ensureClickBlock:^(NSString *nameString, NSString *phoneString) {
         NSLog(@"%@-%@",nameString,phoneString);
+        if (nameString.length== 0) {
+            return ;
+        }
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         [params setObject:nameString forKey:@"name"];
         [params setObject:phoneString forKey:@"phoneNumber"];
@@ -266,11 +271,15 @@
         [[JKHttpTool shareInstance] PutReceiveInfo:params url:urlStr successBlock:^(id responseObject) {
             [YJProgressHUD hide];
             if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
-                JKContactModel *contactModel = [JKContactModel new];
-                contactModel.linkManID = responseObject[@"data"][@"linkManID"];
-                contactModel.name = responseObject[@"data"][@"name"];
-                contactModel.phoneNumber = responseObject[@"data"][@"phoneNumber"];
-                [self.contactList addObject:contactModel];
+                if ([responseObject[@"message"] isEqualToString:@"联系人已存在"]) {
+                    [YJProgressHUD showMessage:@"联系人已存在" inView:self.view];
+                }else{
+                    JKContactModel *contactModel = [JKContactModel new];
+                    contactModel.linkManID = responseObject[@"data"][@"linkManID"];
+                    contactModel.name = responseObject[@"data"][@"name"];
+                    contactModel.phoneNumber = responseObject[@"data"][@"phoneNumber"];
+                    [self.contactList addObject:contactModel];
+                }
             }
         } withFailureBlock:^(NSError *error) {
             [YJProgressHUD hide];
@@ -503,30 +512,27 @@
     }];
 }
 
-#pragma mark -- 根据设备id获取绑定的设备联系人
+#pragma mark -- 根据鱼塘id获取绑定的设备联系人
 - (void)getDeviceContactList{
-    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/linkMan/deviceId/%@",kUrl_Base,self.deviceID];
+    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/linkMan/deviceId/%@",kUrl_Base,self.pondId];
     [YJProgressHUD showProgressCircleNoValue:nil inView:self.view];
     [[JKHttpTool shareInstance] GetReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
         [YJProgressHUD hide];
         if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
-            NSArray *contacts =  responseObject[@"data"];
-            [self.contactList removeAllObjects];
-            for (NSDictionary *dic in contacts) {
-                JKContactsModel *contactsModel = [JKContactsModel new];
-                contactsModel.contacters = dic[@"contacters"];
-                contactsModel.contactPhone = dic[@"contactPhone"];
-                contactsModel.nightContacters = dic[@"nightContacters"];
-                contactsModel.nightContactPhone = dic[@"nightContactPhone"];
-                contactsModel.standbyContact = dic[@"standbyContact"];
-                contactsModel.standbyContactPhone = dic[@"standbyContactPhone"];
-                contactsModel.standbynightContact = dic[@"standbynightContact"];
-                contactsModel.standbynightContactPhone = dic[@"standbynightContactPhone"];
-                [self.contactList addObject:contactsModel];
-            }
-            self.contactsModel = (JKContactsModel *)[self.contactList firstObject];
+            NSDictionary *dic =  responseObject[@"data"];
+            JKContactsModel *contactsModel = [JKContactsModel new];
+            contactsModel.contacters = dic[@"contacters"];
+            contactsModel.contactPhone = dic[@"contactPhone"];
+            contactsModel.nightContacters = dic[@"nightContacters"];
+            contactsModel.nightContactPhone = dic[@"nightContactPhone"];
+            contactsModel.standbyContact = dic[@"standbyContact"];
+            contactsModel.standbyContactPhone = dic[@"standbyContactPhone"];
+            contactsModel.standbynightContact = dic[@"standbynightContact"];
+            contactsModel.standbynightContactPhone = dic[@"standbynightContactPhone"];
+            self.contactsModel = contactsModel;
         }
-        [self.tableView reloadData];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
     } withFailureBlock:^(NSError *error) {
         [YJProgressHUD hide];
     }];
@@ -767,7 +773,7 @@
         cell.isFromRepairVC = self.isFromRepairVC;
         cell.addrStr = self.addrStr;
         self.dcgCell = cell;
-        if (self.isFromRepairVC) {
+        if (self.type == JKEquipmentInfoTypeRepaire) {
             cell.contactsModel = self.contactsModel;
         }
         [cell createUI];
