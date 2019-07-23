@@ -775,13 +775,7 @@
         cell.dataSource = self.dataSource;
         cell.delegate = self;
         cell.deviceModeChangeBlock = ^(NSInteger onLine) {
-            NSString *pairType ;
-            if (onLine) {
-                pairType = @"wired";
-            }else{
-                pairType = @"wireless";
-            }
-            NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/device/%@/deviceModeChange/ch/0/pairType/%@",kUrl_Base,self.tskID,pairType];
+            NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/device/%@/deviceModeChange/ch/0/pairType/%zd",kUrl_Base,self.tskID,onLine];
             [YJProgressHUD showProgressCircleNoValue:nil inView:self.view];
             [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
                 [YJProgressHUD hide];

@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.0.0720</string>
+	<string>3.0.0723</string>
 	<key>CFBundleVersion</key>
-	<string>26</string>
+	<string>27</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>baidumap</string>
