@@ -20,7 +20,7 @@
 @property (nonatomic , assign) CGFloat ph;
 @property (nonatomic , assign) NSInteger alarmType;
 @property (nonatomic , strong) NSString *automatic;
-@property (nonatomic , assign) NSInteger workStatus;
+@property (nonatomic , strong) NSString *workStatus;
 @property (nonatomic , assign) CGFloat oxyLimitUp;
 @property (nonatomic , assign) CGFloat oxyLimitDownOne;
 @property (nonatomic , assign) CGFloat oxyLimitDownTwo;

@@ -144,7 +144,7 @@
             [arr addObject:dic2];
             dModel.aeratorControls = [arr copy];
             dModel.automatic = deviceArr[10];
-            dModel.workStatus = [deviceArr[11] integerValue];
+            dModel.workStatus = deviceArr[11];
             [self.addDeviceArr addObject:dModel];
         }
     }
@@ -288,7 +288,6 @@
             aeratorControl1 = model.aeratorControls[1][@"open"];
         }
         NSString *automatic = model.automatic;
-        NSString *workStatus = [NSString stringWithFormat:@"%ld",model.workStatus];
         [deviceArr addObject:deviceId];
         [deviceArr addObject:name];
         [deviceArr addObject:pondId];
@@ -300,7 +299,7 @@
         [deviceArr addObject:aeratorControl0];
         [deviceArr addObject:aeratorControl1];
         [deviceArr addObject:automatic];
-        [deviceArr addObject:workStatus];
+        [deviceArr addObject:model.workStatus];
         self.deviceStr = [deviceArr componentsJoinedByString:@","];
         [allDeviceArr addObject:self.deviceStr];
     }

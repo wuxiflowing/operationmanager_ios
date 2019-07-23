@@ -14,7 +14,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *oxyValueLb;
 @property (weak, nonatomic) IBOutlet UILabel *pondNameLb;
 @property (weak, nonatomic) IBOutlet UILabel *typeLb;
-@property (weak, nonatomic) IBOutlet UIImageView *statusImageView;
+@property (weak, nonatomic) IBOutlet UILabel *statusLb;
+
 @property (weak, nonatomic) IBOutlet UILabel *control1Lb;
 @property (weak, nonatomic) IBOutlet UIButton *equimentStatus1Btn;
 @property (weak, nonatomic) IBOutlet UILabel *control2Lb;
@@ -60,26 +61,7 @@
     self.pondNameLb.text = pModel.name;
     self.typeLb.text = JKSafeNull(model.type);
     
-    if (model.workStatus==0) {
-        //        self.alarmType = @"正常";
-        self.statusImageView.image = [UIImage imageNamed:@"icon_normal_"];
-    } else if (model.workStatus==1) {
-        //        self.alarmType = @"告警限1";
-        self.statusImageView.image = [UIImage imageNamed:@"icon_ponds_data"];
-    } else if (model.workStatus==2) {
-        //        self.alarmType = @"告警限2";
-        self.statusImageView.image = [UIImage imageNamed:@"icon_ponds_data2"];
-    } else if (model.workStatus==3) {
-        //        self.alarmType = @"不在线告警";
-        self.statusImageView.image = [UIImage imageNamed:@"icon_ponds_offline"];
-    } else if (model.workStatus==4) {
-        //        self.alarmType = @"超过上下限报警"
-        self.statusImageView.image = [UIImage imageNamed:@"icon_ponds_eq"];
-    } else if (model.workStatus==-1) {
-        //        self.alarmType = @"数据解析异常";
-        self.statusImageView.image = [UIImage imageNamed:@"icon_ponds_warning"];
-    }
-
+    self.statusLb.text = [self getWorkStatusDescribeWithWorkStatus:model.workStatus];
     
     [self setControlStatusWithView:self.control1Lb status:model.aeratorControlOne];
     [self setControlStatusWithView:self.control2Lb status:model.aeratorControlTwo];
@@ -103,7 +85,7 @@
     
     
     
-    if (model.workStatus==3) {
+    if ([model.workStatus isEqualToString:@"3"]) {
         self.oxyValueLb.text = @"--";
         self.temLb.text = @"--";
         self.phLb.text = @"--";
@@ -134,4 +116,31 @@
         view.backgroundColor = RGBHex(0x009051);
     }
 }
+
+- (NSString *)getWorkStatusDescribeWithWorkStatus:(NSString *)workStatus{
+
+    NSArray *status = [workStatus componentsSeparatedByString:@","];
+    NSMutableArray *strStatus = [[NSMutableArray alloc] initWithCapacity:0];
+    [status enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isEqualToString:@"0"]) {
+            [strStatus addObject:@"正常"];
+        }else if ([obj isEqualToString:@"1"]){
+            [strStatus addObject:@"数据告警1"];
+        }else if ([obj isEqualToString:@"2"]){
+            [strStatus addObject:@"数据告警2"];
+        }else if ([obj isEqualToString:@"3"]){
+            [strStatus addObject:@"不在线告警"];
+        }else if ([obj isEqualToString:@"5"]){
+            [strStatus addObject:@"设备告警"];
+        }else if ([obj isEqualToString:@"9"]){
+            [strStatus addObject:@"电流异常"];
+        }else if ([obj isEqualToString:@"10"]){
+            [strStatus addObject:@"断电告警"];
+        }else{
+            [strStatus addObject:@""];
+        }
+    }];
+    return [strStatus componentsJoinedByString:@"、"];
+}
+
 @end

@@ -437,7 +437,7 @@
             model.temperature = [dict[@"temperature"] floatValue];
             model.ph = [dict[@"ph"] floatValue];
             model.automatic = dict[@"automatic"];
-            model.workStatus = [dict[@"workStatus"] integerValue];
+            model.workStatus = dict[@"workStatus"];
             model.oxyLimitUp = [dict[@"oxyLimitUp"] floatValue];
             model.oxyLimitDownOne = [dict[@"oxyLimitDownOne"] floatValue];
             model.oxyLimitDownTwo = [[NSString stringWithFormat:@"%@",dict[@"oxyLimitDownTwo"]] floatValue];

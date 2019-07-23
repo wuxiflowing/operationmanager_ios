@@ -154,9 +154,9 @@
                         pcdModel.alarmType = dic[@"alarmType"];
                         pcdModel.alertlineTwo = dic[@"alertlineTwo"];
                         pcdModel.automatic = dic[@"automatic"];
-                        pcdModel.dissolvedOxygen = [dic[@"oxy"] floatValue];
-                        pcdModel.temperature = [dic[@"temp"] floatValue];
-                        pcdModel.ph = [dic[@"ph"] floatValue];
+                        pcdModel.dissolvedOxygen = [JKSafeNull(dic[@"oxy"]) floatValue];
+                        pcdModel.temperature = [JKSafeNull(dic[@"temp"]) floatValue];
+                        pcdModel.ph = [JKSafeNull(dic[@"ph"]) floatValue];
                         pcdModel.enabled = dic[@"enabled"];
                         pcdModel.deviceId = dic[@"id"];
                         pcdModel.ident = dic[@"identifier"];
@@ -164,8 +164,8 @@
                         pcdModel.oxyLimitDownOne = dic[@"oxyLimitDownOne"];
                         pcdModel.oxyLimitUp = dic[@"oxyLimitUp"];
                         pcdModel.scheduled = dic[@"scheduled"];
-                        pcdModel.type = dic[@"type"];
-                        pcdModel.workStatus = [dic[@"workStatus"] integerValue];
+                        pcdModel.type = JKSafeNull(dic[@"type"]);
+                        pcdModel.workStatus = JKSafeNull(dic[@"workStatus"]);
                         NSArray *aeratorControls = dic[@"deviceControlInfoBeanList"];
                         if (aeratorControls != nil && ![aeratorControls isKindOfClass:[NSNull class]] && aeratorControls.count != 0) {
                             pcdModel.aeratorControlOne = aeratorControls[0][@"open"];
@@ -233,18 +233,18 @@
                         pcdModel.alarmType = dic[@"alarmType"];
                         pcdModel.alertlineTwo = dic[@"alertlineTwo"];
                         pcdModel.automatic = dic[@"automatic"];
-                        pcdModel.dissolvedOxygen = [dic[@"oxy"] floatValue];
                         pcdModel.enabled = dic[@"enabled"];
                         pcdModel.deviceId = dic[@"id"];
                         pcdModel.ident = dic[@"identifier"];
                         pcdModel.name = dic[@"name"];
                         pcdModel.oxyLimitDownOne = dic[@"oxyLimitDownOne"];
                         pcdModel.oxyLimitUp = dic[@"oxyLimitUp"];
-                        pcdModel.ph = [dic[@"ph"] floatValue];
                         pcdModel.scheduled = dic[@"scheduled"];
-                        pcdModel.temperature = [dic[@"temp"] floatValue];
-                        pcdModel.type = dic[@"type"];
-                        pcdModel.workStatus = [dic[@"workStatus"] integerValue];
+                        pcdModel.dissolvedOxygen = [JKSafeNull(dic[@"oxy"]) floatValue];
+                        pcdModel.temperature = [JKSafeNull(dic[@"temp"]) floatValue];
+                        pcdModel.ph = [JKSafeNull(dic[@"ph"]) floatValue];
+                        pcdModel.type = JKSafeNull(dic[@"type"]);
+                        pcdModel.workStatus = JKSafeNull(dic[@"workStatus"]);
                         NSArray *aeratorControls = dic[@"deviceControlInfoBeanList"];
                         if (aeratorControls != nil && ![aeratorControls isKindOfClass:[NSNull class]] && aeratorControls.count != 0) {
                             pcdModel.aeratorControlOne = aeratorControls[0][@"open"];

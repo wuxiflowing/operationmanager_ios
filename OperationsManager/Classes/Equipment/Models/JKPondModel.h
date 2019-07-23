@@ -46,7 +46,7 @@
 @property (nonatomic, strong) NSString *scheduled;
 @property (nonatomic, assign) CGFloat temperature;
 @property (nonatomic, strong) NSString *type;
-@property (nonatomic, assign) NSInteger workStatus;
+@property (nonatomic, strong) NSString *workStatus;
 @property (nonatomic, strong) NSString *aeratorControlTwo;
 @property (nonatomic, strong) NSString *aeratorControlOne;
 @property (nonatomic, strong) NSString *ident;

@@ -57,19 +57,8 @@
     }];
     
     UILabel *statusValueLb = [[UILabel alloc] init];
-    if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"0"]) {
-        statusValueLb.text = @"正常";
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"1"]) {
-        statusValueLb.text = @"告警限1";
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"2"]) {
-        statusValueLb.text = @"告警限2";
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"3"]) {
-        statusValueLb.text = @"不在线告警";
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"4"]) {
-        statusValueLb.text = @"超过上下限报警";
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"-1"]) {
-        statusValueLb.text = @"数据解析异常";
-    }
+    statusValueLb.text = [self getWorkStatusDescribeWithWorkStatus:model.workStatus];
+
     if ([statusValueLb.text isEqualToString:@"正常"]) {
         statusValueLb.textColor = kGreenColor;
     } else {
@@ -84,6 +73,31 @@
         make.left.equalTo(statusLb.mas_right).offset(10);
         make.height.equalTo(deviceIDLb.mas_height);
     }];
+}
+
+- (NSString *)getWorkStatusDescribeWithWorkStatus:(NSString *)workStatus{
+    NSArray *status = [workStatus componentsSeparatedByString:@","];
+    NSMutableArray *strStatus = [[NSMutableArray alloc] initWithCapacity:0];
+    [status enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isEqualToString:@"0"]) {
+            [strStatus addObject:@"正常"];
+        }else if ([obj isEqualToString:@"1"]){
+            [strStatus addObject:@"数据告警1"];
+        }else if ([obj isEqualToString:@"2"]){
+            [strStatus addObject:@"数据告警2"];
+        }else if ([obj isEqualToString:@"3"]){
+            [strStatus addObject:@"不在线告警"];
+        }else if ([obj isEqualToString:@"5"]){
+            [strStatus addObject:@"设备告警"];
+        }else if ([obj isEqualToString:@"9"]){
+            [strStatus addObject:@"电流异常"];
+        }else if ([obj isEqualToString:@"10"]){
+            [strStatus addObject:@"断电告警"];
+        }else{
+            [strStatus addObject:@""];
+        }
+    }];
+    return [strStatus componentsJoinedByString:@"、"];
 }
 
 @end

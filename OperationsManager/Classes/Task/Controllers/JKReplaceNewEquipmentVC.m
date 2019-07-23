@@ -416,7 +416,7 @@
             model.deviceId = [NSString stringWithFormat:@"%@",dict[@"identifier"]];
             model.name = [NSString stringWithFormat:@"%@",dict[@"name"]];
             model.type = [NSString stringWithFormat:@"%@",dict[@"type"]];
-            model.workStatus = [dict[@"workStatus"] integerValue];
+            model.workStatus = dict[@"workStatus"];
             model.deviceControlInfoBeanList = dict[@"deviceControlInfoBeanList"];
             model.oxy = [JKSafeNull(dict[@"oxy"]) floatValue];
             model.temp = [JKSafeNull(dict[@"temp"]) floatValue];

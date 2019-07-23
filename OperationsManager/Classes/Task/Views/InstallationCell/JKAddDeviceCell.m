@@ -107,20 +107,33 @@
     self.modelType = model.type;
     self.pondID = model.pondId;
     self.no = self.tag;
-    if (model.workStatus == 0) {
-        self.alarmType = @"正常";
-    } else if (model.workStatus == 1) {
-        self.alarmType = @"告警限1";
-    } else if (model.workStatus == 2) {
-        self.alarmType = @"告警限2";
-    } else if (model.workStatus == 3) {
-        self.alarmType = @"不在线告警";
-    } else if (model.workStatus == 4) {
-        self.alarmType = @"超过上下限报警";
-    } else if (model.workStatus == -1) {
-        self.alarmType = @"数据解析异常";
-    }
+    self.alarmType = [self getWorkStatusDescribeWithWorkStatus:model.workStatus];
     [self.tableView reloadData];
+}
+
+- (NSString *)getWorkStatusDescribeWithWorkStatus:(NSString *)workStatus{
+    NSArray *status = [workStatus componentsSeparatedByString:@","];
+    NSMutableArray *strStatus = [[NSMutableArray alloc] initWithCapacity:0];
+    [status enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isEqualToString:@"0"]) {
+            [strStatus addObject:@"正常"];
+        }else if ([obj isEqualToString:@"1"]){
+            [strStatus addObject:@"数据告警1"];
+        }else if ([obj isEqualToString:@"2"]){
+            [strStatus addObject:@"数据告警2"];
+        }else if ([obj isEqualToString:@"3"]){
+            [strStatus addObject:@"不在线告警"];
+        }else if ([obj isEqualToString:@"5"]){
+            [strStatus addObject:@"设备告警"];
+        }else if ([obj isEqualToString:@"9"]){
+            [strStatus addObject:@"电流异常"];
+        }else if ([obj isEqualToString:@"10"]){
+            [strStatus addObject:@"断电告警"];
+        }else{
+            [strStatus addObject:@""];
+        }
+    }];
+    return [strStatus componentsJoinedByString:@"、"];
 }
 
 #pragma mark -- 删除
