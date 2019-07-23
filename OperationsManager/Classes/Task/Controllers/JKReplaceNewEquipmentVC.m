@@ -553,6 +553,11 @@
         return;
     }
     
+    if (!self.pondName.length) {
+        [YJProgressHUD showMessage:@"请输入鱼塘名称" inView:self.view];
+        return;
+    }
+    
     
     //    if (self.ccgoCell.pondName == nil || self.ccgoCell.ammeterTypeA == nil || self.ccgoCell.powerA == nil || self.ccgoCell.voltageUpA == nil || self.ccgoCell.voltageDownA == nil || self.ccgoCell.electricCurrentUpA == nil|| self.ccgoCell.electricCurrentDownA == nil) {
     //        [YJProgressHUD showMessage:@"请完善控制器1配置" inView:self.view];

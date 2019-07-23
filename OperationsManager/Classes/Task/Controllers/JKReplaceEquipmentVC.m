@@ -121,7 +121,7 @@
             [self checkDeviceTskID:self.deviceID];
         }
     }
-    if (self.type == JKEquipmentInfoTypeRepaire) {
+    if (self.type == JKEquipmentInfoTypeRepaire || self.isSet) {
         [self getDeviceContactList];
     }
 }
@@ -773,7 +773,7 @@
         cell.isFromRepairVC = self.isFromRepairVC;
         cell.addrStr = self.addrStr;
         self.dcgCell = cell;
-        if (self.type == JKEquipmentInfoTypeRepaire) {
+        if (self.type == JKEquipmentInfoTypeRepaire ||self.isSet) {
             cell.contactsModel = self.contactsModel;
         }
         [cell createUI];

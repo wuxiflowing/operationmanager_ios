@@ -18,6 +18,7 @@
 #import "JKEquipmentInfoVC.h"
 #import "JKRepairVC.h"
 #import "JKContactModel.h"
+#import "JKNewEquipmentInfoVC.h"
 @interface JKRepairingInfoVC () <UITableViewDelegate, UITableViewDataSource, JKRepairDeviceCellDelegate, JKReplaceEquipmentVCDelegate,JKReplaceNewEquipmentVCDelegate, JKTaskTopCellDelegate, JKRepairOrderCellDelegate>
 {
     BOOL _isNewDevice;
@@ -207,23 +208,52 @@
 
 #pragma mark -- 设备详情
 - (void)showDeviceInfo:(NSString *)tskId {
-    JKEquipmentInfoVC *eiVC = [[JKEquipmentInfoVC alloc] init];
-    eiVC.tskID = tskId;
-    [self.navigationController pushViewController:eiVC animated:YES];
+
+    
+    JKRepaireInfoModel *model = [self.dataSource lastObject];
+    if ([model.txtRepairEqpKind isEqualToString:@"KD326"]) {
+        JKEquipmentInfoVC *eiVC = [[JKEquipmentInfoVC alloc] init];
+        eiVC.tskID = tskId;
+        [self.navigationController pushViewController:eiVC animated:YES];
+    }
+    
+    if ([model.txtRepairEqpKind isEqualToString:@"QY601"]) {
+        JKNewEquipmentInfoVC *eiVC = [[JKNewEquipmentInfoVC alloc] init];
+        eiVC.tskID = tskId;
+        [self.navigationController pushViewController:eiVC animated:YES];
+    }
+    
 }
 
 #pragma mark -- 参数配置
 - (void)configurationDeviceInfo:(NSString *)tskId {
     JKRepaireInfoModel *model = [self.dataSource lastObject];
-    JKReplaceEquipmentVC *reVC = [[JKReplaceEquipmentVC alloc] init];
-    reVC.delegate = self;
-    reVC.customerId = model.txtFarmerID;
-    reVC.deviceID = tskId;
-    reVC.pondId = model.txtPondID;
-    reVC.pondName = model.txtPondsName;
-    reVC.isSet = YES;
-    reVC.isFromRepairVC = YES;
-    [self.navigationController pushViewController:reVC animated:YES];
+    if ([model.txtRepairEqpKind isEqualToString:@"KD326"]) {
+        JKReplaceEquipmentVC *reVC = [[JKReplaceEquipmentVC alloc] init];
+        reVC.delegate = self;
+        reVC.customerId = model.txtFarmerID;
+        reVC.deviceID = tskId;
+        reVC.pondId = model.txtPondID;
+        reVC.pondName = model.txtPondsName;
+        reVC.isSet = YES;
+        reVC.isFromRepairVC = YES;
+        reVC.pondId = model.cboPondID;
+        [self.navigationController pushViewController:reVC animated:YES];
+    }
+    
+    if ([model.txtRepairEqpKind isEqualToString:@"QY601"]) {
+        JKReplaceNewEquipmentVC *reVC = [[JKReplaceNewEquipmentVC alloc] init];
+        reVC.delegate = self;
+        reVC.customerId = model.txtFarmerID;
+        reVC.deviceID = tskId;
+        reVC.pondId = model.txtPondID;
+        reVC.pondName = model.txtPondsName;
+        reVC.isSet = YES;
+        reVC.isFromRepairVC = YES;
+        reVC.pondId = model.cboPondID;
+        [self.navigationController pushViewController:reVC animated:YES];
+    }
+
 }
 
 #pragma mark -- 结束维修

@@ -60,23 +60,23 @@
     self.pondNameLb.text = pModel.name;
     self.typeLb.text = JKSafeNull(model.type);
     
-    if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"0"]) {
-//        self.alarmType = @"正常";
+    if (model.workStatus==0) {
+        //        self.alarmType = @"正常";
         self.statusImageView.image = [UIImage imageNamed:@"icon_normal_"];
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"1"]) {
-//        self.alarmType = @"告警限1";
+    } else if (model.workStatus==1) {
+        //        self.alarmType = @"告警限1";
         self.statusImageView.image = [UIImage imageNamed:@"icon_ponds_data"];
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"2"]) {
-//        self.alarmType = @"告警限2";
+    } else if (model.workStatus==2) {
+        //        self.alarmType = @"告警限2";
         self.statusImageView.image = [UIImage imageNamed:@"icon_ponds_data2"];
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"3"]) {
-//        self.alarmType = @"不在线告警";
+    } else if (model.workStatus==3) {
+        //        self.alarmType = @"不在线告警";
         self.statusImageView.image = [UIImage imageNamed:@"icon_ponds_offline"];
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"5"]) {
-//        self.alarmType = @"超过上下限报警"
+    } else if (model.workStatus==4) {
+        //        self.alarmType = @"超过上下限报警"
         self.statusImageView.image = [UIImage imageNamed:@"icon_ponds_eq"];
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"-1"]) {
-//        self.alarmType = @"数据解析异常";
+    } else if (model.workStatus==-1) {
+        //        self.alarmType = @"数据解析异常";
         self.statusImageView.image = [UIImage imageNamed:@"icon_ponds_warning"];
     }
 
@@ -85,41 +85,35 @@
     [self setControlStatusWithView:self.control2Lb status:model.aeratorControlTwo];
     self.equimentStatus1Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlOne] isEqualToString:@"0"];
     self.equimentStatus2Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlTwo] isEqualToString:@"0"];
-    if ([model.aeratorControlTree isKindOfClass:[NSNull class]]) {
-        self.control3Lb.hidden = YES;
-        self.equimentStatus3Btn.hidden = YES;
-    }else{
+    if (model.aeratorControlTree) {
         [self setControlStatusWithView:self.control3Lb status:model.aeratorControlTree];
         self.equimentStatus3Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlTree] isEqualToString:@"0"];
-    }
-    if ([model.aeratorControlFour isKindOfClass:[NSNull class]]) {
-        self.control4Lb.hidden = YES;
-        self.equimentStatus4Btn.hidden = YES;
     }else{
+        self.control3Lb.hidden = YES;
+        self.equimentStatus3Btn.hidden = YES;
+    }
+    if (model.aeratorControlFour) {
         [self setControlStatusWithView:self.control4Lb status:model.aeratorControlFour];
         self.equimentStatus4Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlFour] isEqualToString:@"0"];
+        
+    }else{
+        self.control4Lb.hidden = YES;
+        self.equimentStatus4Btn.hidden = YES;
     }
     
     
-    if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"3"]) {
+    
+    if (model.workStatus==3) {
         self.oxyValueLb.text = @"--";
         self.temLb.text = @"--";
         self.phLb.text = @"--";
     }else{
-        if ([model.dissolvedOxygen isEqualToString:@"<null>"]) {
-            self.oxyValueLb.text = @"--";
-        }else{
-            self.oxyValueLb.text = [NSString stringWithFormat:@"%@",model.dissolvedOxygen];
-        }
-        if ([model.temperature isEqualToString:@"<null>"]) {
-            self.temLb.text = @"--";
-        }else{
-            self.temLb.text = [NSString stringWithFormat:@"%@℃",model.temperature];
-        }
-        if ([[NSString stringWithFormat:@"%@",model.ph] isEqualToString:@"-1"]||[model.temperature isEqualToString:@"<null>"]) {
+        self.oxyValueLb.text = [NSString stringWithFormat:@"%.1f",model.dissolvedOxygen];
+        self.temLb.text = [NSString stringWithFormat:@"%.1f ℃",model.temperature];
+        if (model.ph == -1) {
             self.phLb.text = @"--";
         }else{
-            self.phLb.text = model.ph;
+            self.phLb.text = [NSString stringWithFormat:@"%.1f",model.ph];
         }
     }
     

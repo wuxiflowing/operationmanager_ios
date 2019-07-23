@@ -85,25 +85,22 @@
         automatic = @"自动";
     }
     
-    if ([[NSString stringWithFormat:@"%@",model.ph] isEqualToString:@"-1"]) {
-        model.ph = @"--";
-    }
+    NSString *ph = model.ph != -1?[NSString stringWithFormat:@"%f",model.ph]:@"--";
     
-    CGFloat dissolvedOxygen = [[NSString stringWithFormat:@"%@",model.dissolvedOxygen] floatValue];
-    self.valueArr = @[[NSString stringWithFormat:@"%.2fml/L",dissolvedOxygen], controlOne, [NSString stringWithFormat:@"%@ ℃",model.temperature], controlTwo, model.ph, automatic];
+    self.valueArr = @[[NSString stringWithFormat:@"%.2fml/L",model.dissolvedOxygen], controlOne, [NSString stringWithFormat:@"%f ℃",model.temperature], controlTwo, ph, automatic];
     self.deviceID = model.deviceIdentifier;
     self.modelType = model.type;
-    if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"0"]) {
+    if (model.workStatus==0) {
         self.alarmType = @"正常";
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"1"]) {
+    } else if (model.workStatus==1) {
         self.alarmType = @"告警限1";
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"2"]) {
+    } else if (model.workStatus==2) {
         self.alarmType = @"告警限2";
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"3"]) {
+    } else if (model.workStatus==3) {
         self.alarmType = @"不在线告警";
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"4"]) {
+    } else if (model.workStatus==4) {
         self.alarmType = @"超过上下限报警";
-    } else if ([[NSString stringWithFormat:@"%@",model.workStatus] isEqualToString:@"-1"]) {
+    } else if (model.workStatus==-1) {
         self.alarmType = @"数据解析异常";
     }
     [self.tableView reloadData];

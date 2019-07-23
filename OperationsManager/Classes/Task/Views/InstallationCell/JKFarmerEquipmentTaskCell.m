@@ -54,7 +54,8 @@
 - (IBAction)onEquimentDetailAction:(id)sender {
     if ([self.model.type isEqualToString:@"QY601"]) {
         self.equipmentType = JKEquipmentType_New;
-    }else{
+    }
+    if ([self.model.type isEqualToString:@"KD326"]) {
         self.equipmentType = JKEquipmentType_Old;
     }
     if ([_delegate respondsToSelector:@selector(setDeviceInfo:withPondName:withPondId:withNo:withType:)]) {

@@ -769,7 +769,9 @@
         reVC.isSet = YES;
         reVC.no = no;
         [self.navigationController pushViewController:reVC animated:YES];
-    }else{
+    }
+    
+    if (equipmentType == JKEquipmentType_New) {
         JKReplaceNewEquipmentVC *reVC = [[JKReplaceNewEquipmentVC alloc] init];
         reVC.delegate = self;
         reVC.customerId = model.txtFarmerID;
@@ -1018,20 +1020,20 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.addDeviceArr.count==0) {
-        return;
-    }
-    JKDeviceModel *model = self.addDeviceArr[indexPath.row - 3];
-    if ([model.type isEqualToString:@"QY601"]) {
-        JKNewEquipmentInfoVC *eiVC = [[JKNewEquipmentInfoVC alloc] init];
-        eiVC.tskID = model.deviceId;
-        [self.navigationController pushViewController:eiVC animated:YES];
-    }else{
-        JKEquipmentInfoVC *eiVC = [[JKEquipmentInfoVC alloc] init];
-        eiVC.tskID = model.deviceId;
-        [self.navigationController pushViewController:eiVC animated:YES];
-    }
-
-}
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if (self.addDeviceArr.count==0) {
+//        return;
+//    }
+//    JKDeviceModel *model = self.addDeviceArr[indexPath.row - 3];
+//    if ([model.type isEqualToString:@"QY601"]) {
+//        JKNewEquipmentInfoVC *eiVC = [[JKNewEquipmentInfoVC alloc] init];
+//        eiVC.tskID = model.deviceId;
+//        [self.navigationController pushViewController:eiVC animated:YES];
+//    }else{
+//        JKEquipmentInfoVC *eiVC = [[JKEquipmentInfoVC alloc] init];
+//        eiVC.tskID = model.deviceId;
+//        [self.navigationController pushViewController:eiVC animated:YES];
+//    }
+//
+//}
 @end
