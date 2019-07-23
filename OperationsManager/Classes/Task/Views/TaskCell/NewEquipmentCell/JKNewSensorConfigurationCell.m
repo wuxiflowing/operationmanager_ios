@@ -124,6 +124,10 @@
     }else{
         self.matchBtn.enabled = YES;
     }
+    
+    if (self.deviceModeChangeBlock) {
+        self.deviceModeChangeBlock(self.connectionType);
+    }
 
 }
 

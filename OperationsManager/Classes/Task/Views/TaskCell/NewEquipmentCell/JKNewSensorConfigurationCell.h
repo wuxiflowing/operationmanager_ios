@@ -21,5 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *alertlineTwoStr;
 @property (nonatomic, assign) NSInteger connectionType;
 @property (nonatomic, copy) void(^matchingBlock)(NSInteger connectionType);
+@property (nonatomic, copy) void(^deviceModeChangeBlock)(NSInteger onLine);
 @end
 NS_ASSUME_NONNULL_END

@@ -362,10 +362,15 @@
 
 #pragma mark -- 设备校准
 - (void)resetInstall:(NSString *)tskID {
-    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/device/%@/reset/install",kUrl_Base,tskID];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params setObject:@(0) forKey:@"ch"];
+    [params setObject:@"do" forKey:@"type"];
+    [params setObject:@(1) forKey:@"stage"];
+
+    NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/newDevice/%@/reset/install",kUrl_Base,tskID];
     
     [YJProgressHUD showProgressCircleNoValue:@"设备校准..." inView:self.view];
-    [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+    [[JKHttpTool shareInstance] PutReceiveInfo:params url:urlStr successBlock:^(id responseObject) {
         [YJProgressHUD hide];
         if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
             [YJProgressHUD showMessage:@"设备校准成功" inView:self.view];
@@ -769,6 +774,30 @@
         self.scgCell = cell;
         cell.dataSource = self.dataSource;
         cell.delegate = self;
+        cell.deviceModeChangeBlock = ^(NSInteger onLine) {
+            NSString *pairType ;
+            if (onLine) {
+                pairType = @"wired";
+            }else{
+                pairType = @"wireless";
+            }
+            NSString *urlStr = [NSString stringWithFormat:@"%@/RESTAdapter/app/device/%@/deviceModeChange/ch/0/pairType/%@",kUrl_Base,self.tskID,pairType];
+            [YJProgressHUD showProgressCircleNoValue:nil inView:self.view];
+            [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+                [YJProgressHUD hide];
+                if ([[NSString stringWithFormat:@"%@",responseObject[@"success"]] isEqualToString:@"1"]) {
+                    [YJProgressHUD showMessage:@"切换成功" inView:self.view];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self getDeviceInfo:self.tskID];
+                    });
+                } else {
+                    [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
+                }
+                [self.tableView reloadData];
+            } withFailureBlock:^(NSError *error) {
+                [YJProgressHUD hide];
+            }];
+        };
         cell.matchingBlock = ^(NSInteger connectionType) {
             NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
             [params setObject:[NSString stringWithFormat:@"%zd",connectionType] forKey:@"pairType"];

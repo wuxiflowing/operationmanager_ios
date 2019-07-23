@@ -85,14 +85,14 @@
     [self setControlStatusWithView:self.control2Lb status:model.aeratorControlTwo];
     self.equimentStatus1Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlOne] isEqualToString:@"0"];
     self.equimentStatus2Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlTwo] isEqualToString:@"0"];
-    if (model.aeratorControlTree) {
+    if (model.aeratorControlTree.integerValue) {
         [self setControlStatusWithView:self.control3Lb status:model.aeratorControlTree];
         self.equimentStatus3Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlTree] isEqualToString:@"0"];
     }else{
         self.control3Lb.hidden = YES;
         self.equimentStatus3Btn.hidden = YES;
     }
-    if (model.aeratorControlFour) {
+    if (model.aeratorControlFour.integerValue) {
         [self setControlStatusWithView:self.control4Lb status:model.aeratorControlFour];
         self.equimentStatus4Btn.selected = [[NSString stringWithFormat:@"%@",model.statusControlFour] isEqualToString:@"0"];
 

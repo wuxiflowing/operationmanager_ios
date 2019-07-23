@@ -130,6 +130,9 @@
 
             for (NSDictionary *dict in responseObject[@"data"]) {
                 JKPondModel *pModel = [[JKPondModel alloc] init];
+                if ([dict[@"pondId"] isEqualToString:@"PND11110000000000959"]) {
+                    
+                }
                 pModel.area = dict[@"area"];//
                 pModel.fishVariety = dict[@"fishVariety"];//
                 pModel.name = dict[@"name"];//
@@ -143,8 +146,6 @@
                 }
                 pModel.region = dict[@"region"];//
                 pModel.childDeviceList = dict[@"childDeviceList"];
-                
-                
                 
                 if ([dict[@"childDeviceList"] count] != 0) {
                     [self.sectionTitileArr addObject:pModel];
@@ -168,14 +169,14 @@
                         pcdModel.workStatus = JKSafeNull(dic[@"workStatus"]);
                         NSArray *aeratorControls = dic[@"deviceControlInfoBeanList"];
                         if (aeratorControls != nil && ![aeratorControls isKindOfClass:[NSNull class]] && aeratorControls.count != 0) {
-                            pcdModel.aeratorControlOne = aeratorControls[0][@"open"];
-                            pcdModel.aeratorControlTwo = aeratorControls[1][@"open"];
-                            pcdModel.aeratorControlTree = aeratorControls[2][@"open"];
-                            pcdModel.aeratorControlFour = aeratorControls[3][@"open"];
-                            pcdModel.statusControlOne = aeratorControls[0][@"auto"];
-                            pcdModel.statusControlTwo = aeratorControls[1][@"auto"];
-                            pcdModel.statusControlTree = aeratorControls[2][@"auto"];
-                            pcdModel.statusControlFour = aeratorControls[3][@"auto"];
+                            pcdModel.aeratorControlOne = JKSafeNull(aeratorControls[0][@"open"]);
+                            pcdModel.aeratorControlTwo = JKSafeNull(aeratorControls[1][@"open"]);
+                            pcdModel.aeratorControlTree = JKSafeNull(aeratorControls[2][@"open"]);
+                            pcdModel.aeratorControlFour = JKSafeNull(aeratorControls[3][@"open"]);
+                            pcdModel.statusControlOne = JKSafeNull(aeratorControls[0][@"auto"]);
+                            pcdModel.statusControlTwo = JKSafeNull(aeratorControls[1][@"auto"]);
+                            pcdModel.statusControlTree = JKSafeNull(aeratorControls[2][@"auto"]);
+                            pcdModel.statusControlFour = JKSafeNull(aeratorControls[3][@"auto"]);
                         }
                         [arr addObject:pcdModel];
                     }
@@ -247,14 +248,14 @@
                         pcdModel.workStatus = JKSafeNull(dic[@"workStatus"]);
                         NSArray *aeratorControls = dic[@"deviceControlInfoBeanList"];
                         if (aeratorControls != nil && ![aeratorControls isKindOfClass:[NSNull class]] && aeratorControls.count != 0) {
-                            pcdModel.aeratorControlOne = aeratorControls[0][@"open"];
-                            pcdModel.aeratorControlTwo = aeratorControls[1][@"open"];
-                            pcdModel.aeratorControlTree = aeratorControls[2][@"open"];
-                            pcdModel.aeratorControlFour = aeratorControls[3][@"open"];
-                            pcdModel.statusControlOne = aeratorControls[0][@"auto"];
-                            pcdModel.statusControlTwo = aeratorControls[1][@"auto"];
-                            pcdModel.statusControlTree = aeratorControls[2][@"auto"];
-                            pcdModel.statusControlFour = aeratorControls[3][@"auto"];
+                            pcdModel.aeratorControlOne = JKSafeNull(aeratorControls[0][@"open"]);
+                            pcdModel.aeratorControlTwo = JKSafeNull(aeratorControls[1][@"open"]);
+                            pcdModel.aeratorControlTree = JKSafeNull(aeratorControls[2][@"open"]);
+                            pcdModel.aeratorControlFour = JKSafeNull(aeratorControls[3][@"open"]);
+                            pcdModel.statusControlOne = JKSafeNull(aeratorControls[0][@"auto"]);
+                            pcdModel.statusControlTwo = JKSafeNull(aeratorControls[1][@"auto"]);
+                            pcdModel.statusControlTree = JKSafeNull(aeratorControls[2][@"auto"]);
+                            pcdModel.statusControlFour = JKSafeNull(aeratorControls[3][@"auto"]);
                         }
                         [arr addObject:pcdModel];
                     }
