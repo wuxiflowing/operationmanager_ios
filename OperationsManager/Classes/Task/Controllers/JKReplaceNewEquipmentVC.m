@@ -28,8 +28,8 @@
 @property (nonatomic, strong) JKNewSensorConfigurationCell *scgCell;
 @property (nonatomic, strong) JKNewControllerConfigurationOneCell *ccgoCell;
 @property (nonatomic, strong) JKNewControllerConfigurationTwoCell *ccgtCell;
-@property (nonatomic, strong) JKNewControllerConfigurationThreeCell *ccgthCell;
-@property (nonatomic, strong) JKNewControllerConfigurationFourCell *ccgfCell;
+//@property (nonatomic, strong) JKNewControllerConfigurationThreeCell *ccgthCell;
+//@property (nonatomic, strong) JKNewControllerConfigurationFourCell *ccgfCell;
 @property (nonatomic, strong) JKDeviceConfigurationCell *dcgCell;
 @property (nonatomic, strong) CLLocationManager* locationManager;
 @property (nonatomic, assign) CGFloat lat;
@@ -433,6 +433,9 @@
                 if (model.deviceControlInfoBeanList.count != 0) {
                     for (NSInteger i = 0; i<4; i++) {
                         NSDictionary *dic = [model.deviceControlInfoBeanList objectAtIndex:i];
+                        if ([dic[@"open"] isKindOfClass:[NSNull class]]) {
+                            break;
+                        }
                         JKDeviceControlInfo *dviceControl = [JKDeviceControlInfo new];
                         dviceControl.controlId = [dic[@"controlId"] integerValue];
                         dviceControl.oxyLimitUp = [dic[@"oxyLimitUp"] floatValue];
@@ -623,59 +626,59 @@
         [dict2 setObject:self.ccgtCell.oxygenDownB forKey:@"oxyLimitDown"];
     }
     
-    NSMutableDictionary *dict3 = [[NSMutableDictionary alloc] init];
-    [dict3 setObject:@(2) forKey:@"controlId"];
-    if (self.ccgthCell.electricCurrentUpC == nil) {
-        [dict3 setObject:@(0)  forKey:@"electricityUp"];
-    } else {
-        [dict3 setObject:self.ccgthCell.electricCurrentUpC  forKey:@"electricityUp"];
-    }
-    if (self.ccgthCell.electricCurrentDownC == nil) {
-        [dict3 setObject:@(0) forKey:@"electricityDown"];
-    } else {
-        [dict3 setObject:self.ccgthCell.electricCurrentDownC forKey:@"electricityDown"];
-    }
-    
-    if (self.ccgthCell.oxygenUpC == nil) {
-        [dict3 setObject:@(0) forKey:@"oxyLimitUp"];
-    } else {
-        [dict3 setObject:self.ccgthCell.oxygenUpC forKey:@"oxyLimitUp"];
-    }
-    if (self.ccgthCell.oxygenDownC == nil) {
-        [dict3 setObject:@(0) forKey:@"oxyLimitDown"];
-    } else {
-        [dict3 setObject:self.ccgthCell.oxygenDownC forKey:@"oxyLimitDown"];
-    }
-    
-    NSMutableDictionary *dict4 = [[NSMutableDictionary alloc] init];
-    [dict4 setObject:@(3) forKey:@"controlId"];
-    if (self.ccgfCell.electricCurrentUpD == nil) {
-        [dict4 setObject:@(0)  forKey:@"electricityUp"];
-    } else {
-        [dict4 setObject:self.ccgfCell.electricCurrentUpD  forKey:@"electricityUp"];
-    }
-    if (self.ccgfCell.electricCurrentDownD == nil) {
-        [dict4 setObject:@(0) forKey:@"electricityDown"];
-    } else {
-        [dict4 setObject:self.ccgfCell.electricCurrentDownD forKey:@"electricityDown"];
-    }
-    
-    if (self.ccgfCell.oxygenUpD == nil) {
-        [dict4 setObject:@(0) forKey:@"oxyLimitUp"];
-    } else {
-        [dict4 setObject:self.ccgfCell.oxygenUpD forKey:@"oxyLimitUp"];
-    }
-    if (self.ccgfCell.oxygenDownD == nil) {
-        [dict4 setObject:@(0) forKey:@"oxyLimitDown"];
-    } else {
-        [dict4 setObject:self.ccgfCell.oxygenDownD forKey:@"oxyLimitDown"];
-    }
+//    NSMutableDictionary *dict3 = [[NSMutableDictionary alloc] init];
+//    [dict3 setObject:@(2) forKey:@"controlId"];
+//    if (self.ccgthCell.electricCurrentUpC == nil) {
+//        [dict3 setObject:@(0)  forKey:@"electricityUp"];
+//    } else {
+//        [dict3 setObject:self.ccgthCell.electricCurrentUpC  forKey:@"electricityUp"];
+//    }
+//    if (self.ccgthCell.electricCurrentDownC == nil) {
+//        [dict3 setObject:@(0) forKey:@"electricityDown"];
+//    } else {
+//        [dict3 setObject:self.ccgthCell.electricCurrentDownC forKey:@"electricityDown"];
+//    }
+//
+//    if (self.ccgthCell.oxygenUpC == nil) {
+//        [dict3 setObject:@(0) forKey:@"oxyLimitUp"];
+//    } else {
+//        [dict3 setObject:self.ccgthCell.oxygenUpC forKey:@"oxyLimitUp"];
+//    }
+//    if (self.ccgthCell.oxygenDownC == nil) {
+//        [dict3 setObject:@(0) forKey:@"oxyLimitDown"];
+//    } else {
+//        [dict3 setObject:self.ccgthCell.oxygenDownC forKey:@"oxyLimitDown"];
+//    }
+//
+//    NSMutableDictionary *dict4 = [[NSMutableDictionary alloc] init];
+//    [dict4 setObject:@(3) forKey:@"controlId"];
+//    if (self.ccgfCell.electricCurrentUpD == nil) {
+//        [dict4 setObject:@(0)  forKey:@"electricityUp"];
+//    } else {
+//        [dict4 setObject:self.ccgfCell.electricCurrentUpD  forKey:@"electricityUp"];
+//    }
+//    if (self.ccgfCell.electricCurrentDownD == nil) {
+//        [dict4 setObject:@(0) forKey:@"electricityDown"];
+//    } else {
+//        [dict4 setObject:self.ccgfCell.electricCurrentDownD forKey:@"electricityDown"];
+//    }
+//
+//    if (self.ccgfCell.oxygenUpD == nil) {
+//        [dict4 setObject:@(0) forKey:@"oxyLimitUp"];
+//    } else {
+//        [dict4 setObject:self.ccgfCell.oxygenUpD forKey:@"oxyLimitUp"];
+//    }
+//    if (self.ccgfCell.oxygenDownD == nil) {
+//        [dict4 setObject:@(0) forKey:@"oxyLimitDown"];
+//    } else {
+//        [dict4 setObject:self.ccgfCell.oxygenDownD forKey:@"oxyLimitDown"];
+//    }
     
     NSMutableArray *arr = [[NSMutableArray alloc] init];
     [arr addObject:dict1];
     [arr addObject:dict2];
-    [arr addObject:dict3];
-    [arr addObject:dict4];
+//    [arr addObject:dict3];
+//    [arr addObject:dict4];
     
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     [params setObject:arr forKey:@"deviceControlInfoBeanList"];
@@ -727,7 +730,7 @@
 
 #pragma mark -- UITableViewDelegate && UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 7;
+    return 5;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -735,7 +738,7 @@
         return 248 +240;
     } else if (indexPath.row == 1) {
         return 207;
-    } else if (indexPath.row == 6) {
+    } else if (indexPath.row == 4) {
         return 70;
     } else {
         return 48*6+15;
@@ -811,7 +814,7 @@
             }];
         };
         return cell;
-    } else if (indexPath.row == 6) {
+    } else if (indexPath.row == 4) {
         static NSString *ID = @"cell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
         if(!cell){
@@ -900,7 +903,7 @@
                 }];
             };
             return cell;
-        }  else if (indexPath.row == 3) {
+        }  else {
             static NSString *ID = @"JKNewControllerConfigurationTwoCell";
             JKNewControllerConfigurationTwoCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
             if(!cell){
@@ -934,75 +937,76 @@
                 }];
             };
             return cell;
-        } else if (indexPath.row == 4) {
-            static NSString *ID = @"JKNewControllerConfigurationThreeCell";
-            JKNewControllerConfigurationThreeCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-            if(!cell){
-                cell = [[JKNewControllerConfigurationThreeCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ID];
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            }
-            self.ccgthCell = cell;
-            if (self.dataSource.count == 0) {
-                return cell;
-            } else {
-                cell.dataSource = self.dataSource;
-            }
-            cell.controlCallBack = ^(NSString * _Nonnull controlState) {
-                NSString *state = [controlState isEqualToString:@"1"]?@"on":@"off";
-                NSString *urlStr = [NSString stringWithFormat:@"%@/v1/deviceMonitor/core/device/identifier/%@/control/2/switch/%@",kUrl_Base,self.tskID,state];
-                [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
-                    if (![responseObject[@"err"] boolValue]) {
-                        if ([responseObject[@"state"] isEqualToString:@"on"]) {
-                            [YJProgressHUD showMessage:@"已开启" inView:self.view];
-                        } else {
-                            [YJProgressHUD showMessage:@"已关闭" inView:self.view];
-                        }
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            [self getDeviceInfo:self.tskID];
-                        });
-                    }else{
-                        [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
-                    }
-                    [self.tableView reloadData];
-                } withFailureBlock:^(NSError *error) {
-                }];
-            };
-            return cell;
-        } else {
-            static NSString *ID = @"JKNewControllerConfigurationFourCell";
-            JKNewControllerConfigurationFourCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-            if(!cell){
-                cell = [[JKNewControllerConfigurationFourCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ID];
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            }
-            self.ccgfCell = cell;
-            if (self.dataSource.count == 0) {
-                return cell;
-            } else {
-                cell.dataSource = self.dataSource;
-            }
-            cell.controlCallBack = ^(NSString * _Nonnull controlState) {
-                NSString *state = [controlState isEqualToString:@"1"]?@"on":@"off";
-                NSString *urlStr = [NSString stringWithFormat:@"%@/v1/deviceMonitor/core/device/identifier/%@/control/3/switch/%@",kUrl_Base,self.tskID,state];
-                [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
-                    if (![responseObject[@"err"] boolValue]) {
-                        if ([responseObject[@"state"] isEqualToString:@"on"]) {
-                            [YJProgressHUD showMessage:@"已开启" inView:self.view];
-                        } else {
-                            [YJProgressHUD showMessage:@"已关闭" inView:self.view];
-                        }
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            [self getDeviceInfo:self.tskID];
-                        });
-                    }else{
-                        [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
-                    }
-                    [self.tableView reloadData];
-                } withFailureBlock:^(NSError *error) {
-                }];
-            };
-            return cell;
         }
+//        else if (indexPath.row == 4) {
+//            static NSString *ID = @"JKNewControllerConfigurationThreeCell";
+//            JKNewControllerConfigurationThreeCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+//            if(!cell){
+//                cell = [[JKNewControllerConfigurationThreeCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ID];
+//                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//            }
+//            self.ccgthCell = cell;
+//            if (self.dataSource.count == 0) {
+//                return cell;
+//            } else {
+//                cell.dataSource = self.dataSource;
+//            }
+//            cell.controlCallBack = ^(NSString * _Nonnull controlState) {
+//                NSString *state = [controlState isEqualToString:@"1"]?@"on":@"off";
+//                NSString *urlStr = [NSString stringWithFormat:@"%@/v1/deviceMonitor/core/device/identifier/%@/control/2/switch/%@",kUrl_Base,self.tskID,state];
+//                [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+//                    if (![responseObject[@"err"] boolValue]) {
+//                        if ([responseObject[@"state"] isEqualToString:@"on"]) {
+//                            [YJProgressHUD showMessage:@"已开启" inView:self.view];
+//                        } else {
+//                            [YJProgressHUD showMessage:@"已关闭" inView:self.view];
+//                        }
+//                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                            [self getDeviceInfo:self.tskID];
+//                        });
+//                    }else{
+//                        [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
+//                    }
+//                    [self.tableView reloadData];
+//                } withFailureBlock:^(NSError *error) {
+//                }];
+//            };
+//            return cell;
+//        } else {
+//            static NSString *ID = @"JKNewControllerConfigurationFourCell";
+//            JKNewControllerConfigurationFourCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+//            if(!cell){
+//                cell = [[JKNewControllerConfigurationFourCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ID];
+//                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//            }
+//            self.ccgfCell = cell;
+//            if (self.dataSource.count == 0) {
+//                return cell;
+//            } else {
+//                cell.dataSource = self.dataSource;
+//            }
+//            cell.controlCallBack = ^(NSString * _Nonnull controlState) {
+//                NSString *state = [controlState isEqualToString:@"1"]?@"on":@"off";
+//                NSString *urlStr = [NSString stringWithFormat:@"%@/v1/deviceMonitor/core/device/identifier/%@/control/3/switch/%@",kUrl_Base,self.tskID,state];
+//                [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
+//                    if (![responseObject[@"err"] boolValue]) {
+//                        if ([responseObject[@"state"] isEqualToString:@"on"]) {
+//                            [YJProgressHUD showMessage:@"已开启" inView:self.view];
+//                        } else {
+//                            [YJProgressHUD showMessage:@"已关闭" inView:self.view];
+//                        }
+//                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                            [self getDeviceInfo:self.tskID];
+//                        });
+//                    }else{
+//                        [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
+//                    }
+//                    [self.tableView reloadData];
+//                } withFailureBlock:^(NSError *error) {
+//                }];
+//            };
+//            return cell;
+//        }
     }
 }
 
