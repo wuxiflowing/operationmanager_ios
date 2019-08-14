@@ -887,10 +887,13 @@
                 NSString *urlStr = [NSString stringWithFormat:@"%@/v1/deviceMonitor/core/device/identifier/%@/control/0/switch/%@",kUrl_Base,self.tskID,state];
                 [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
                     if (![responseObject[@"err"] boolValue]) {
+                        JKDeviceModel *model = [self.dataSource objectAtIndex:0];
                         if ([responseObject[@"state"] isEqualToString:@"on"]) {
                             [YJProgressHUD showMessage:@"已开启" inView:self.view];
+                            model.controlInfo1.open = 1;
                         } else {
                             [YJProgressHUD showMessage:@"已关闭" inView:self.view];
+                            model.controlInfo1.open = 0;
                         }
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [self getDeviceInfo:self.tskID];
@@ -921,10 +924,13 @@
                 NSString *urlStr = [NSString stringWithFormat:@"%@/v1/deviceMonitor/core/device/identifier/%@/control/1/switch/%@",kUrl_Base,self.tskID,state];
                 [[JKHttpTool shareInstance] PutReceiveInfo:nil url:urlStr successBlock:^(id responseObject) {
                     if (![responseObject[@"err"] boolValue]) {
+                        JKDeviceModel *model = [self.dataSource objectAtIndex:0];
                         if ([responseObject[@"state"] isEqualToString:@"on"]) {
                             [YJProgressHUD showMessage:@"已开启" inView:self.view];
+                            model.controlInfo2.open = 1;
                         } else {
                             [YJProgressHUD showMessage:@"已关闭" inView:self.view];
+                            model.controlInfo2.open = 0;
                         }
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [self getDeviceInfo:self.tskID];

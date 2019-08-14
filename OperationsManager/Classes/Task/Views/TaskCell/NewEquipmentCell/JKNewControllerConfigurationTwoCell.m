@@ -76,7 +76,7 @@
     self.oxygenDownB =[NSString stringWithFormat:@"%.1f",model.controlInfo2.oxyLimitDown];
     self.electricCurrentUpB = [NSString stringWithFormat:@"%.1f",model.controlInfo2.electricityUp];
     self.electricCurrentDownB = [NSString stringWithFormat:@"%.1f",model.controlInfo2.electricityDown];
-    self.open = [NSString stringWithFormat:@"%zd",model.controlInfo1.open];
+    self.open = [NSString stringWithFormat:@"%zd",model.controlInfo2.open];
     [self.tableView reloadData];
 }
 
