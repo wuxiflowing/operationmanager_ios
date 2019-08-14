@@ -76,6 +76,7 @@
     self.oxygenDownB =[NSString stringWithFormat:@"%.1f",model.controlInfo2.oxyLimitDown];
     self.electricCurrentUpB = [NSString stringWithFormat:@"%.1f",model.controlInfo2.electricityUp];
     self.electricCurrentDownB = [NSString stringWithFormat:@"%.1f",model.controlInfo2.electricityDown];
+    self.open = [NSString stringWithFormat:@"%zd",model.controlInfo1.open];
     [self.tableView reloadData];
 }
 
@@ -155,6 +156,24 @@
     if (indexPath.row == 0) {
         cell.textLabel.text = @"控制器2配置";
         cell.textLabel.font = JKFont(16);
+        if (self.open != nil) {
+            UILabel *stateLb = [[UILabel alloc] init];
+            if ([self.open isEqualToString:@"1"]) {
+                stateLb.text = @"开";
+                stateLb.textColor = kGreenColor;
+            } else {
+                stateLb.text = @"关";
+                stateLb.textColor = kRedColor;
+            }
+            stateLb.textAlignment = NSTextAlignmentRight;
+            stateLb.font = JKFont(14);
+            [cell.contentView addSubview:stateLb];
+            [stateLb mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.bottom.equalTo(cell.contentView);
+                make.right.equalTo(cell.contentView).offset(-15);
+                make.width.mas_equalTo(30);
+            }];
+        }
         
     } else if (indexPath.row == 1 || indexPath.row == 2 || indexPath.row == 3 ||
                indexPath.row == 4) {

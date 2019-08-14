@@ -18,7 +18,7 @@ typedef void(^NewControllerConfigurationTwoCallback)(NSString *controlState);
 @property (nonatomic, strong) NSString *oxygenDownB;
 @property (nonatomic, strong) NSString *electricCurrentUpB;
 @property (nonatomic, strong) NSString *electricCurrentDownB;
-
+@property (nonatomic, strong) NSString *open;
 @property (copy, nonatomic)NewControllerConfigurationTwoCallback controlCallBack;
 @end
 

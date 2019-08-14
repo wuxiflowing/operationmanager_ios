@@ -19,6 +19,8 @@ typedef void(^NewControllerConfigurationOneCallback)(NSString *controlState);
 @property (nonatomic, strong) NSString *electricCurrentUpA;
 @property (nonatomic, strong) NSString *electricCurrentDownA;
 
+@property (nonatomic, strong) NSString *open;
+
 @property (copy, nonatomic)NewControllerConfigurationOneCallback controlCallBack;
 @end
 

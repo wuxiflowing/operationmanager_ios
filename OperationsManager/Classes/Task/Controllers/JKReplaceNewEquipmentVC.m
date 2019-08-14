@@ -438,10 +438,10 @@
                         }
                         JKDeviceControlInfo *dviceControl = [JKDeviceControlInfo new];
                         dviceControl.controlId = [dic[@"controlId"] integerValue];
-                        dviceControl.oxyLimitUp = [dic[@"oxyLimitUp"] floatValue];
-                        dviceControl.oxyLimitDown = [dic[@"oxyLimitDown"] floatValue];
-                        dviceControl.electricityUp = [dic[@"electricityUp"] floatValue];
-                        dviceControl.electricityDown = [dic[@"electricityDown"] floatValue];
+                        dviceControl.oxyLimitUp = [JKSafeNull(dic[@"oxyLimitUp"]) floatValue];
+                        dviceControl.oxyLimitDown = [JKSafeNull(dic[@"oxyLimitDown"]) floatValue];
+                        dviceControl.electricityUp = [JKSafeNull(dic[@"electricityUp"]) floatValue];
+                        dviceControl.electricityDown = [JKSafeNull(dic[@"electricityDown"]) floatValue];
                         dviceControl.open = [JKSafeNull(dic[@"open"]) integerValue];
                         dviceControl.isAuto = [JKSafeNull(dic[@"isAuto"]) integerValue];
                         if (i == 0) {
