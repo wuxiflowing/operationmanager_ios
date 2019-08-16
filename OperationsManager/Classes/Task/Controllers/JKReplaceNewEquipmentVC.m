@@ -895,9 +895,9 @@
                             [YJProgressHUD showMessage:@"已关闭" inView:self.view];
                             model.controlInfo1.open = 0;
                         }
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            [self getDeviceInfo:self.tskID];
-                        });
+//                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                            [self getDeviceInfo:self.tskID];
+//                        });
                     }else{
                         [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
                     }
@@ -932,9 +932,9 @@
                             [YJProgressHUD showMessage:@"已关闭" inView:self.view];
                             model.controlInfo2.open = 0;
                         }
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            [self getDeviceInfo:self.tskID];
-                        });
+//                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                            [self getDeviceInfo:self.tskID];
+//                        });
                     }else{
                         [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
                     }

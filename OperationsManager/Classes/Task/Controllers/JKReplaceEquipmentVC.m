@@ -366,9 +366,9 @@
             } else {
                 [YJProgressHUD showMessage:@"已关闭" inView:self.view];
             }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self getDeviceInfo:tskID];
-            });
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                [self getDeviceInfo:tskID];
+//            });
         } else {
             [YJProgressHUD showMessage:responseObject[@"message"] inView:self.view];
         }
