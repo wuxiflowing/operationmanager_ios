@@ -88,7 +88,11 @@
     for (UIView *view in self.searchBar.subviews) {
         if ([view isKindOfClass:NSClassFromString(@"UIView")]&&view.subviews.count>0) {
             view.backgroundColor = kBgColor;
-            [[view.subviews objectAtIndex:0] removeFromSuperview];
+            if (@available(ios 13.0,*)) {
+                [view.subviews objectAtIndex:0].hidden = YES;
+            }else{
+                [[view.subviews objectAtIndex:0] removeFromSuperview];
+            }
             break;
         }
     }

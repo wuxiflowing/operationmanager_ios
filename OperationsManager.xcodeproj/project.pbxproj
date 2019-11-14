@@ -282,7 +282,7 @@
 		A84913172126B751004C96C6 /* JKToolKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKToolKit.h; sourceTree = "<group>"; };
 		A849131A2126D2F3004C96C6 /* GTSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GTSDK.framework; sourceTree = "<group>"; };
 		A849131C2126D38F004C96C6 /* OperationsManager.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OperationsManager.entitlements; sourceTree = "<group>"; };
-		A85197FA20D0AA4600BA35FC /* OperationsManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OperationsManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A85197FA20D0AA4600BA35FC /* 运维管家(测).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "运维管家(测).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A851980620D0AA4600BA35FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A851980B20D0AA4600BA35FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A851983D20D0B78900BA35FC /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -647,7 +647,7 @@
 		A85197FB20D0AA4600BA35FC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A85197FA20D0AA4600BA35FC /* OperationsManager.app */,
+				A85197FA20D0AA4600BA35FC /* 运维管家(测).app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1384,7 +1384,7 @@
 			);
 			name = OperationsManager;
 			productName = OperationsManager;
-			productReference = A85197FA20D0AA4600BA35FC /* OperationsManager.app */;
+			productReference = A85197FA20D0AA4600BA35FC /* 运维管家(测).app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1841,6 +1841,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = PY7VN3BA49;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1872,8 +1873,9 @@
 				INFOPLIST_FILE = OperationsManager/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 3.0.1114;
 				PRODUCT_BUNDLE_IDENTIFIER = com.qyt.om;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "运维管家(测)";
 				PROVISIONING_PROFILE = Automatic;
 				PROVISIONING_PROFILE_SPECIFIER = "OperationsManager Development";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1890,6 +1892,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = PY7VN3BA49;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1921,8 +1924,9 @@
 				INFOPLIST_FILE = OperationsManager/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 3.0.1114;
 				PRODUCT_BUNDLE_IDENTIFIER = com.qyt.om;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "运维管家(测)";
 				PROVISIONING_PROFILE = Automatic;
 				PROVISIONING_PROFILE_SPECIFIER = "OperationsManager AdHoc";
 				TARGETED_DEVICE_FAMILY = 1;
